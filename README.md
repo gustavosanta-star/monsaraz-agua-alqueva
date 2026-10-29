@@ -4,9 +4,9 @@ A reproducible geospatial pipeline and web application that tracks the change in
 **Alqueva reservoir's water surface within the parish (*freguesia*) of Monsaraz**, Portugal,
 from Copernicus Sentinel-2 imagery (2017–2025).
 
-**Live demo:** https://gustavosanta-estrela.github.io/monsaraz-água-alqueva/
+**Live demo:** https://gustavosanta-star.github.io/monsaraz-agua-alqueva/
 
-![Change map 2020 → 2025](mudanca_2020_2025.png)
+![The Monsaraz em Mudança web application](app.png)
 
 ---
 
@@ -18,6 +18,11 @@ absolute and relative difference, a quarterly time series, and a documented meth
 
 The engineering goal was a pipeline where **adding a new date is a single function call** — not a
 manual GIS session — with reproducible analysis, documented indicators and quality control.
+
+Between the driest and wettest late-summers in the series, the parish's water surface grew by
+~276 ha (+27%); the change map below shows **where** it grew (green = water gained, 2020 → 2025):
+
+![Water gained between 2020 and 2025 (green)](mudanca_2020_2025.png)
 
 ## Study area
 
