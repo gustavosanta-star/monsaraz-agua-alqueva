@@ -84,6 +84,29 @@
 <div id="wrap">
   <div id="map"><div id="status">A carregar dados…</div></div>
   <aside>
+    <details class="meth block" open>
+      <summary>Sobre o projeto</summary>
+      <div class="body">
+        <p class="note">Projeto independente de <b>Gustavo Santa</b> para analisar e comunicar a
+        evolução da superfície de água do Alqueva na freguesia de Monsaraz, combinando
+        processamento geoespacial, análise temporal e uma aplicação web interativa.</p>
+        <dl class="meta" style="margin-top:10px">
+          <dt>O que desenvolvi</dt><dd>Todo o <i>pipeline</i> de processamento (Python + Google
+          Earth Engine): seleção e composição das imagens, deteção e vetorização da água, cálculo
+          dos indicadores, controlo de qualidade, validação e esta aplicação web.</dd>
+          <dt>Dados externos utilizados</dt><dd>Imagens Sentinel-2 (ESA/Copernicus); limite da
+          freguesia da CAOP (DGT); dataset de validação JRC Global Surface Water.</dd>
+          <dt>Como verifiquei os resultados</dt><dd>Validação independente contra o JRC (concordância
+          espacial e correlação temporal) e quantificação da sensibilidade ao limiar.</dd>
+          <dt>Limitações</dt><dd>Indicador de superfície (não de volume); incerteza de margem ao
+          nível do pixel; validação limitada ao período de sobreposição com o JRC. Ver
+          <i>Dados e metodologia</i>.</dd>
+        </dl>
+        <p class="note" style="margin-top:10px">Código aberto:
+        <a href="https://github.com/gustavosanta-star/monsaraz-agua-alqueva" style="color:var(--b)">github.com/gustavosanta-star/monsaraz-agua-alqueva</a></p>
+      </div>
+    </details>
+
     <div class="block">
       <h2>Comparar duas datas</h2>
       <div class="sel">
