@@ -12,14 +12,14 @@ from Copernicus Sentinel-2 imagery (2017–2025).
 
 ## Overview
 
-The application lets anyone compare the **late-summer (Q3) water surface** of the parish between
+The application lets anyone compare the **Q3 (July–September) water surface** of the parish between
 any two years: the delineated water extent on a satellite basemap, the area of each date, the
 absolute and relative difference, a quarterly time series, and a documented methodology.
 
 The engineering goal was a pipeline where **adding a new date is a single function call** — not a
 manual GIS session — with reproducible analysis, documented indicators and quality control.
 
-Between the driest and wettest late-summers in the series, the parish's water surface grew by
+Between the lowest and highest Q3 values in the series, the parish's water surface grew by
 ~276 ha (+27%); the change map below shows **where** it grew (green = water gained, 2020 → 2025):
 
 ![Water gained between 2020 and 2025 (green)](mudanca_2020_2025.png)
@@ -41,11 +41,12 @@ The large body of the Alqueva lies mostly outside the parish; the indicator meas
 | Post-processing | Vectorization + 10 m simplification |
 | Areas | Computed in **ETRS89/PT-TM06** (EPSG:3763); served in WGS84 |
 
-## Validation — against JRC Global Surface Water
+## Consistency check — JRC Global Surface Water
 
-Independent benchmark: **JRC Global Surface Water** (Pekel et al., 2016), the EU reference dataset
-for surface water. It is itself satellite-derived (Landsat), so it is an **independent reference,
-not ground truth**.
+Comparison with **JRC Global Surface Water** (Pekel et al., 2016), the EU reference dataset for
+surface water. JRC GSW is itself derived from **optical imagery (Landsat)**, so agreement shows
+**cross-sensor consistency, not independent validation**: two optical methods can share the same
+errors. An independent test (area vs. reservoir water level, EDIA/SNIRH) is planned.
 
 - **Spatial agreement (IoU): 92.7%** — July 2020, compared only over JRC-observed pixels, at 30 m.
 - **Temporal correlation (Pearson r): 0.80** — 41 months (2017–2021) with >80% JRC coverage, areas
@@ -53,21 +54,41 @@ not ground truth**.
 
 ## Uncertainty
 
-Each area carries a **± band = the sensitivity of the area to a ±0.05 shift of the MNDWI
-threshold** (mean ≈ ±15 ha, ~1.3%). It measures **robustness to the threshold choice** — it is
-**not** a statistical confidence interval, and it does not capture classification, geolocation or
-temporal-mixing error.
+Two terms are reported. Neither is a statistical confidence interval.
+
+1. **Threshold sensitivity:** area change for a ±0.05 shift of the MNDWI threshold — mean
+   ≈ ±15 ha (~1.3%).
+2. **Shoreline (mixed-pixel) term:** MNDWI uses B11, native **20 m**. Shoreline length inside the
+   parish, counted on the 20 m grid, is **46–54 km**. Worst case — every edge pixel biased by half
+   a pixel in the same direction — gives **±46–54 ha (~4%)**; with independent errors it is
+   **<1 ha**. The threshold term falls between the two.
+
+A systematic edge bias affects both dates in the same direction and largely cancels in a
+difference. Even under the most conservative assumption (opposite biases, added linearly), the
+2020 → 2025 change (+276 ha) exceeds the combined ±100 ha; small differences such as
+2022 → 2023 (+35 ha) do not, and the app flags them as within the uncertainty.
+
+## Quality checks
+
+- **Non-reservoir water** (farm ponds, small dams): isolated using a reservoir envelope built from
+  the JRC GSW maximum water extent (largest connected body, ≥ ~92 ha, dilated 30 m). It accounts for
+  **0.2–1.0 ha in Q3 (<0.1%)** — negligible, so it is reported rather than removed. Many ponds are
+  not detected at all in Q3 (dry, turbid or vegetated).
+- **Cloud gaps:** ~0.1% of the parish without valid data in every quarterly composite.
 
 ## Limitations
 
 - **Fixed MNDWI threshold (0)** — not scene-adaptive (turbidity, sun angle).
 - The **quarterly median smooths** within-quarter water-level changes: each value is a *typical*
   extent, not a single instant.
-- The dominant area uncertainty is at the **shoreline** (mixed 10 m pixels), scaling with perimeter.
-- The **± captures threshold robustness only** — a lower bound of the total uncertainty.
-- **Validation scope:** the IoU is a single date; *r* is limited to 2017–2021 (the JRC monthly
-  series ends in 2021), so **2022–2025 are not independently validated**; the >80%-coverage filter
-  biases toward clearer months; and part of *r* reflects the **shared seasonal cycle** of both series.
+- The dominant area uncertainty is at the **shoreline**: MNDWI uses B11 (native **20 m**), so mixed
+  edge pixels along this very irregular shoreline may weigh as much as the threshold choice.
+- The uncertainty terms cover the **threshold and shoreline mixed pixels** only; geolocation,
+  radiometric and temporal-mixing errors are not quantified.
+- **No independent validation yet:** the JRC comparison is optical-vs-optical. Its scope is also
+  limited: the IoU is a single date; *r* covers 2017–2021 only (the JRC monthly series ends in
+  2021); the >80%-coverage filter biases toward clearer months; and part of *r* reflects the
+  **shared seasonal cycle** of both series.
 - **Administrative boundary:** from a WFS-derived CAOP GeoJSON; the exact CAOP edition is
   unconfirmed. The parish geometry is stable since the 2013 reorganization.
 - The water area is a **proxy for the system state**, driven by both rainfall and reservoir
@@ -91,8 +112,10 @@ Set your Earth Engine project id in the scripts, then run in order:
 | `03_serie.py` | Annual summer series |
 | `04_trimestral.py` | Quarterly series with cloud masking + coverage flag |
 | `05_comparar.py` | Per-year water polygons (GeoJSON) + change map |
-| `06_validacao.py` | Validation vs JRC GSW (IoU, Pearson r) |
+| `06_validacao.py` | Consistency check vs JRC GSW (IoU, Pearson r) |
 | `07_incerteza.py` | Threshold-sensitivity uncertainty |
+| `08_margem.py` | Shoreline length and mixed-pixel uncertainty (20 m grid) |
+| `09_envolvente.py` | Quality check: water outside the reservoir envelope (ponds) |
 
 Serve the web app locally (it reads the generated data files, so it needs a server — not a
 double-click):

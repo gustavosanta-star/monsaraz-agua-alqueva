@@ -93,13 +93,14 @@
         <dl class="meta" style="margin-top:10px">
           <dt>O que desenvolvi</dt><dd>Todo o <i>pipeline</i> de processamento (Python + Google
           Earth Engine): seleção e composição das imagens, deteção e vetorização da água, cálculo
-          dos indicadores, controlo de qualidade, validação e esta aplicação web.</dd>
+          dos indicadores, controlo de qualidade, verificação de consistência e esta aplicação web.</dd>
           <dt>Dados externos utilizados</dt><dd>Imagens Sentinel-2 (ESA/Copernicus); limite da
-          freguesia da CAOP (DGT); dataset de validação JRC Global Surface Water.</dd>
-          <dt>Como verifiquei os resultados</dt><dd>Validação independente contra o JRC (concordância
-          espacial e correlação temporal) e quantificação da sensibilidade ao limiar.</dd>
+          freguesia da CAOP (DGT); JRC Global Surface Water, usado como comparação.</dd>
+          <dt>Como verifiquei os resultados</dt><dd>Comparação de consistência com o JRC (outro produto
+          ótico, não verdade de terreno) e quantificação da sensibilidade ao limiar. Validação
+          independente (área vs. cota da albufeira, EDIA/SNIRH) em preparação.</dd>
           <dt>Limitações</dt><dd>Indicador de superfície (não de volume); incerteza de margem ao
-          nível do pixel; validação limitada ao período de sobreposição com o JRC. Ver
+          nível do pixel; ainda sem validação independente da classificação. Ver
           <i>Dados e metodologia</i>.</dd>
         </dl>
         <p class="note" style="margin-top:10px">Código aberto:
@@ -129,14 +130,21 @@
         <div class="card"><div class="val" id="areaA">—</div><div class="unc" id="uncA"></div><div class="lab" id="labA">Data A</div></div>
         <div class="card"><div class="val" id="areaB">—</div><div class="unc" id="uncB"></div><div class="lab" id="labB">Data B</div></div>
       </div>
-      <p class="note" id="uncExpl" hidden style="margin-top:9px">O valor <b>±</b> é a
-      <b>sensibilidade ao limiar</b>: quanto a área varia se o limiar do MNDWI mudar em ±0,05.
-      Indica a robustez do método ao limiar escolhido — <b>não</b> é um intervalo de confiança
-      estatístico nem uma margem de erro validada.</p>
+      <div id="uncExpl" hidden style="margin-top:9px">
+        <p class="note"><b>Limiar ±:</b> quanto a área varia se o limiar do MNDWI mudar em ±0,05.
+        Mede a robustez à escolha do limiar.</p>
+        <p class="note"><b>Margem, até ±:</b> pior caso dos pixéis mistos na margem. O MNDWI usa a
+        banda B11 (20 m nativos); se todos os pixéis de margem estivessem errados em meio pixel no
+        mesmo sentido, a área mudaria até este valor (comprimento da margem × 10 m). Se os erros
+        forem aleatórios, anulam-se quase por completo (&lt;1 ha).</p>
+        <p class="note">Nenhum dos dois é um intervalo de confiança estatístico. São limites para
+        perceber que diferenças são robustas.</p>
+      </div>
       <div class="delta">
         <div class="big" id="deltaV">—</div>
         <div class="frase" id="deltaFrase"></div>
         <div class="ctx" id="deltaCtx"></div>
+        <div class="ctx" id="deltaUnc"></div>
         <div class="foot">Áreas em hectares inteiros; a diferença é calculada a partir das áreas originais, antes do arredondamento.</div>
       </div>
     </div>
@@ -149,7 +157,7 @@
     </div>
 
     <div class="block">
-      <h2>Validação (vs JRC Global Surface Water)
+      <h2>Consistência com o JRC Global Surface Water
         <button class="infobtn" id="infoVal" aria-expanded="false" aria-controls="valExpl" title="Como foi calculado?">i</button>
       </h2>
       <div class="valrow">
@@ -164,8 +172,11 @@
         da freguesia; em cada mês compara-se a área de água dos dois métodos sobre os mesmos
         pixéis observados, a 30 m. Mede a concordância da <i>dinâmica</i>, não de datas isoladas.</p>
         <p class="note"><b>Grelhas / sem dados:</b> tudo reduzido a 30 m; meses e pixéis sem
-        observação do JRC são excluídos, nunca contados como zero. O JRC é também um produto de
-        satélite (Landsat), por isso é uma referência independente, não verdade de terreno.</p>
+        observação do JRC são excluídos, nunca contados como zero.</p>
+        <p class="note"><b>O que isto prova (e não prova):</b> o JRC também deriva de imagens
+        óticas (Landsat). A concordância mostra <b>consistência entre sensores</b>, não validação
+        independente: dois métodos óticos podem errar da mesma forma. O teste independente
+        previsto é cruzar a área com a cota da albufeira (EDIA/SNIRH).</p>
       </div>
     </div>
 
@@ -181,8 +192,16 @@
           <dt>Pós-processamento</dt><dd>Vetorização da máscara e simplificação (tolerância 10 m).</dd>
           <dt>Referência e áreas</dt><dd>Cálculo em ETRS89/PT-TM06 (EPSG:3763); dados servidos em WGS84.</dd>
           <dt>Limite administrativo</dt><dd>CAOP — Direção-Geral do Território. Versão exata: <i>por confirmar</i>.</dd>
-          <dt>Validação</dt><dd>JRC Global Surface Water (Pekel et al., 2016): IoU 92,7% (julho 2020); r = 0,80 (41 meses com &gt;80% de cobertura JRC, 2017–2021).</dd>
-          <dt>Incerteza</dt><dd>Sensibilidade ao limiar MNDWI (±0,05); banda média ≈ ±15 ha (~1,3% da área). Não é intervalo de confiança estatístico.</dd>
+          <dt>Consistência (JRC)</dt><dd>JRC Global Surface Water (Pekel et al., 2016): IoU 92,7% (julho 2020); r = 0,80 (41 meses com &gt;80% de cobertura JRC, 2017–2021).</dd>
+          <dt>Incerteza</dt><dd>Dois termos, nenhum deles intervalo de confiança estatístico.
+          (1) Sensibilidade ao limiar MNDWI (±0,05): ≈ ±15 ha (~1,3% da área).
+          (2) Pixéis mistos na margem: 46–54 km de margem dentro da freguesia, na grelha de 20 m
+          da B11; pior caso (meio pixel sistemático) ≈ ±46–54 ha (~4%); com erros aleatórios
+          &lt;1 ha. Um enviesamento sistemático afeta as duas datas no mesmo sentido e anula-se em
+          grande parte na diferença.</dd>
+          <dt>Água fora da albufeira</dt><dd>Charcas e pequenas barragens, identificadas com uma
+          envolvente do Alqueva derivada da extensão máxima do JRC: 0,2–1,0 ha no T3 (&lt;0,1%).
+          Efeito desprezável; não removidas.</dd>
           <dt>Data de processamento</dt><dd>Outubro de 2026.</dd>
         </dl>
         <p class="note" style="margin-top:12px"><b>Nota:</b> a comparação descreve diferenças
@@ -193,7 +212,7 @@
     <div class="block">
       <h2>Fontes</h2>
       <p class="src">Imagens: <b>Copernicus Sentinel-2</b> (ESA), via Google Earth Engine.<br>
-      Validação: <b>JRC Global Surface Water</b> (Pekel et al., 2016).<br>
+      Comparação: <b>JRC Global Surface Water</b> (Pekel et al., 2016).<br>
       Limite administrativo: <b>CAOP</b> — Direção-Geral do Território.<br>
       Base cartográfica: Esri, Maxar, Earthstar Geographics.</p>
     </div>
@@ -207,14 +226,14 @@ const TRIM=3;                                  // os dados do mapa são do 3.º 
 const NOME_TRI={1:"1.º trimestre (janeiro–março)",2:"2.º trimestre (abril–junho)",
                 3:"3.º trimestre (julho–setembro)",4:"4.º trimestre (outubro–dezembro)"};
 const fileFor=a=>`agua_${a}_T3.geojson`;
-const store={}, incert={};
+const store={}, incert={}, margem={};
 let serie=[], anosOk=[];
 const corA=getComputedStyle(document.documentElement).getPropertyValue('--a').trim();
 const corB=getComputedStyle(document.documentElement).getPropertyValue('--b').trim();
 
 const map=L.map('map').setView([38.44,-7.38],12);
 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-  {maxZoom:18,attribution:'Base: Esri, Maxar · Água: Sentinel-2 (análise própria) · Limite: CAOP/DGT · Validação: JRC GSW'}).addTo(map);
+  {maxZoom:18,attribution:'Base: Esri, Maxar · Água: Sentinel-2 (análise própria) · Limite: CAOP/DGT · Comparação: JRC GSW'}).addTo(map);
 L.control.scale({imperial:false}).addTo(map);
 let legDiv=null;
 const legenda=L.control({position:'bottomleft'});
@@ -279,6 +298,8 @@ function periodo(ano){return `${ano} · ${NOME_TRI[TRIM]}`;}
       render();}).catch(()=>{});
     fetch('incerteza.csv').then(r=>{if(!r.ok)throw 0;return r.text();}).then(t=>{
       parseCSV(t).forEach(r=>incert[+r.ano]=+r.incerteza_ha); render();}).catch(()=>{});
+    fetch('margem.csv').then(r=>{if(!r.ok)throw 0;return r.text();}).then(t=>{
+      parseCSV(t).forEach(r=>margem[+r.ano]=+r.sistematico_ha); render();}).catch(()=>{});
   }catch(err){
     const st=document.getElementById('status');
     if(st) st.textContent='Erro a carregar os dados. Confirma que os .geojson estão na pasta e que abriste via servidor local (http://localhost:8000).';
@@ -328,8 +349,12 @@ function render(){
   const aA=store[a].area, aB=store[b].area;
   document.getElementById('areaA').textContent=fmt(aA)+' ha';
   document.getElementById('areaB').textContent=fmt(aB)+' ha';
-  document.getElementById('uncA').textContent=incert[a]!=null?('± '+Math.round(incert[a])+' ha'):'';
-  document.getElementById('uncB').textContent=incert[b]!=null?('± '+Math.round(incert[b])+' ha'):'';
+  const uncTxt=ano=>{ const p=[];
+    if(incert[ano]!=null) p.push('limiar ±'+Math.round(incert[ano]));
+    if(margem[ano]!=null) p.push('margem até ±'+Math.round(margem[ano]));
+    return p.length?p.join(' · ')+' ha':''; };
+  document.getElementById('uncA').textContent=uncTxt(a);
+  document.getElementById('uncB').textContent=uncTxt(b);
   document.getElementById('labA').textContent=periodo(a);
   document.getElementById('labB').textContent=periodo(b);
 
@@ -347,6 +372,13 @@ function render(){
     const verbo=d>=0?'Mais':'Menos';
     frase.textContent=`${verbo} ${fmt(Math.abs(d))} ha de superfície de água detetada em ${b} face a ${a}.`;
   }
+  const du=document.getElementById('deltaUnc');
+  if(a!==b && margem[a]!=null && margem[b]!=null){
+    const pior=margem[a]+margem[b];
+    du.textContent = Math.abs(d)>pior
+      ? `A diferença é maior do que a incerteza de margem combinada no pior caso (±${fmt(pior)} ha).`
+      : `A diferença está dentro da incerteza de margem combinada no pior caso (±${fmt(pior)} ha): interpretar com cautela.`;
+  } else { du.textContent=''; }
   updateLegenda(a,b);
   try{ drawChart(a,b); }catch(e){ console.warn('gráfico:',e); }
 }
