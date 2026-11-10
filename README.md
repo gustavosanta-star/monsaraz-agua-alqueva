@@ -46,11 +46,46 @@ The large body of the Alqueva lies mostly outside the parish; the indicator meas
 Comparison with **JRC Global Surface Water** (Pekel et al., 2016), the EU reference dataset for
 surface water. JRC GSW is itself derived from **optical imagery (Landsat)**, so agreement shows
 **cross-sensor consistency, not independent validation**: two optical methods can share the same
-errors. An independent test (area vs. reservoir water level, EDIA/SNIRH) is planned.
+errors. The independent test is the area–water level comparison below.
 
 - **Spatial agreement (IoU): 92.7%** — July 2020, compared only over JRC-observed pixels, at 30 m.
 - **Temporal correlation (Pearson r): 0.80** — 41 months (2017–2021) with >80% JRC coverage, areas
   compared over the same observed pixels, at 30 m.
+
+## Independent validation — official water level (SNIRH)
+
+A reservoir's flooded area is a rising function of its water level. The official level (*cota*)
+and stored volume of the Alqueva are measured at the dam and published by **SNIRH (APA, I.P.)** —
+a source that has nothing to do with satellite imagery. For this test the method was applied to the
+**whole Alqueva** (including the Spanish part, within the JRC-derived reservoir envelope, 24,596 ha),
+on **single-date** Sentinel-2 images, each paired with the official level of the same day (±3 days).
+
+![Alqueva water area vs. official water level](area_cota.png)
+
+**Area vs. level (Phase 1).** Of 851 image dates (2017–2025), **158** show the reservoir with
+< 50 ha of cloud gaps and have a level record.
+
+- **145 of the 158 dates follow the area–level curve: r = 0.97** (quadratic fit, R² = 0.94),
+  with a scatter of **±423 ha (2.5%)** for a single image.
+- The other **13 (8%)** are flagged as probable classification errors (haze, thin cloud, turbid
+  water) by robust rejection (residual > 3.5 × MAD); 12 of them fall *below* the curve. They are kept
+  and marked, not deleted. **With all 158 dates, r = 0.72.** Both numbers are reported.
+
+**Volume (Phase 2).** In a reservoir, dV = A · dh, so the satellite area can be integrated over the
+level to estimate volume changes, and compared with the official volume–level relation (dV/dh):
+
+- The satellite area is **~92% of the area implied by the official volume data**, with a nearly
+  constant ratio (0.91–0.94) across 144–151 m: a systematic underestimate, most likely from
+  shoreline mixed pixels and flooded vegetation that MNDWI does not classify as water.
+- Volume change between 143.1 m and 152.0 m: **1,510 hm³ (satellite) vs 1,630 hm³ (official)**.
+- Volume series rebuilt from **one** reference volume (2023-07-10) plus the satellite curve,
+  against 450 official records: mean error −37 hm³, **RMSE 59 hm³ (1.8%)**.
+- Note: the commonly quoted **25,000 ha** at full supply level (152 m) is not consistent with the
+  official volume data themselves, whose dV/dh implies ~21,500 ha at 151 m — close to the
+  satellite curve (~20,200 ha at 151 m; ~21,200 ha at 152 m).
+
+The satellite measures **volume changes, not absolute volume**: it cannot see the reservoir bed, so
+an absolute series needs one reference volume.
 
 ## Uncertainty
 
@@ -85,10 +120,13 @@ difference. Even under the most conservative assumption (opposite biases, added 
   edge pixels along this very irregular shoreline may weigh as much as the threshold choice.
 - The uncertainty terms cover the **threshold and shoreline mixed pixels** only; geolocation,
   radiometric and temporal-mixing errors are not quantified.
-- **No independent validation yet:** the JRC comparison is optical-vs-optical. Its scope is also
+- The JRC comparison is optical-vs-optical (independent validation is the SNIRH test). Its scope is
   limited: the IoU is a single date; *r* covers 2017–2021 only (the JRC monthly series ends in
   2021); the >80%-coverage filter biases toward clearer months; and part of *r* reflects the
   **shared seasonal cycle** of both series.
+- **Area–level test:** ~8% of single-date images are anomalous and must be filtered; the satellite
+  area is ~8% below the area implied by official volume data (systematic, nearly constant).
+- **Volume:** only **changes** in volume are estimated; an absolute value needs a reference volume.
 - **Administrative boundary:** from a WFS-derived CAOP GeoJSON; the exact CAOP edition is
   unconfirmed. The parish geometry is stable since the 2013 reorganization.
 - The water area is a **proxy for the system state**, driven by both rainfall and reservoir
@@ -116,6 +154,9 @@ Set your Earth Engine project id in the scripts, then run in order:
 | `07_incerteza.py` | Threshold-sensitivity uncertainty |
 | `08_margem.py` | Shoreline length and mixed-pixel uncertainty (20 m grid) |
 | `09_envolvente.py` | Quality check: water outside the reservoir envelope (ponds) |
+| `10_snirh.py` | Downloads the official Alqueva water level and volume (SNIRH) |
+| `11_area_cota.py` | Whole-reservoir water area on single dates + matching official level |
+| `12_volume.py` | Area–level curve, anomaly flags, volume comparison (no GEE; plain Python) |
 
 Serve the web app locally (it reads the generated data files, so it needs a server — not a
 double-click):
@@ -130,6 +171,8 @@ python -m http.server 8000
 - **Copernicus Sentinel-2** (ESA), via Google Earth Engine.
 - **JRC Global Surface Water** — Pekel, J.-F., Cottam, A., Gorelick, N. & Belward, A. S. (2016).
   *High-resolution mapping of global surface water and its long-term changes.* Nature 540, 418–422.
+- **SNIRH** — Sistema Nacional de Informação de Recursos Hídricos, Agência Portuguesa do Ambiente,
+  I.P.: Alqueva water level and volume.
 - **CAOP** — Carta Administrativa Oficial de Portugal, Direção-Geral do Território.
 - Basemap tiles: Esri, Maxar, Earthstar Geographics.
 

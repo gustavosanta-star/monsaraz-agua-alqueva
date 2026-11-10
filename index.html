@@ -3,224 +3,593 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Monsaraz em Mudança — Superfície de Água do Alqueva</title>
-<link rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<title>Gustavo Santa · Portfólio Geoespacial</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <style>
-  :root{--bg:#0e1116;--panel:#171c24;--line:#2a3340;--ink:#e7edf3;
-    --muted:#9fb0c0;--a:#f5a623;--b:#28c7ff;--neutral:#c7d3de;}
-  *{box-sizing:border-box}
-  html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);
-    font-family:"Segoe UI",system-ui,-apple-system,sans-serif}
-  header{padding:14px 20px;border-bottom:1px solid var(--line)}
-  header h1{margin:0;font-size:1.15rem;font-weight:650}
-  header p{margin:2px 0 0;color:var(--muted);font-size:.82rem}
-  #wrap{display:flex;height:calc(100% - 64px)}
-  #map{flex:1;min-height:320px;background:#0b0e12}
-  aside{width:360px;border-left:1px solid var(--line);background:var(--panel);
-    padding:18px;overflow:auto}
-  .block{margin-bottom:22px}
-  .block h2{font-size:.72rem;text-transform:uppercase;letter-spacing:1px;
-    color:var(--muted);margin:0 0 10px;display:flex;align-items:center;gap:6px}
-  .sel{display:flex;gap:10px}
-  .sel label{flex:1;font-size:.75rem;color:var(--muted)}
-  select{width:100%;margin-top:4px;background:#0e1319;color:var(--ink);
-    border:1px solid var(--line);border-radius:7px;padding:7px 8px;font-size:.9rem}
-  .periodo{margin-top:10px;font-size:.73rem;color:var(--muted)}
-  .toggles{margin-top:12px;display:flex;flex-direction:column;gap:6px;font-size:.78rem}
-  .toggles label{display:flex;align-items:center;gap:8px;cursor:pointer;color:var(--ink)}
-  .swatch{display:inline-block;width:11px;height:11px;border-radius:2px}
-  .swatch.line{background:none;border-top:2px dashed #e7edf3;border-radius:0;width:14px;height:0}
-  .areas{display:flex;gap:10px}
-  .card{flex:1;background:#0e1319;border:1px solid var(--line);border-radius:9px;padding:12px}
-  .card .val{font-size:1.4rem;font-weight:680;line-height:1.1}
-  .card .unc{font-size:.72rem;color:var(--muted);margin-top:2px}
-  .card .lab{font-size:.72rem;color:var(--muted);margin-top:3px}
-  .delta{margin-top:12px;background:#0e1319;border:1px solid var(--line);border-radius:9px;padding:12px 14px}
-  .delta .big{font-size:1.35rem;font-weight:680;color:var(--neutral)}
-  .delta .frase{font-size:.85rem;color:var(--ink);margin-top:7px;line-height:1.45}
-  .delta .ctx{font-size:.72rem;color:var(--muted);margin-top:3px}
-  .delta .foot{font-size:.68rem;color:var(--muted);margin-top:8px;opacity:.85;line-height:1.4}
-  .infobtn{background:none;border:1px solid var(--line);color:var(--muted);border-radius:50%;
-    width:18px;height:18px;font-size:.7rem;line-height:1;cursor:pointer;padding:0}
-  .infobtn:focus-visible{outline:2px solid var(--b);outline-offset:2px}
-  #chart svg{width:100%;height:auto;display:block}
-  .valrow{display:flex;gap:10px}
-  .valrow .card{text-align:center}
-  .valrow .card .val{font-size:1.25rem}
-  details.meth{border:1px solid var(--line);border-radius:9px;background:#0e1319;padding:0}
-  details.meth summary{cursor:pointer;padding:12px 14px;font-size:.72rem;text-transform:uppercase;
-    letter-spacing:1px;color:var(--muted);list-style:none}
-  details.meth summary::-webkit-details-marker{display:none}
-  details.meth summary::after{content:"▸";float:right}
-  details.meth[open] summary::after{content:"▾"}
-  details.meth .body{padding:0 14px 14px}
-  .note{font-size:.78rem;color:var(--muted);line-height:1.55;margin:0}
-  .note+.note{margin-top:9px}
-  .note b{color:var(--ink);font-weight:600}
-  dl.meta{margin:0;font-size:.76rem;color:var(--muted);line-height:1.5}
-  dl.meta dt{color:var(--ink);font-weight:600;margin-top:8px}
-  dl.meta dd{margin:0 0 0 0}
-  .src{font-size:.72rem;color:var(--muted);line-height:1.5}
-  #status{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-    color:var(--muted);font-size:.9rem;text-align:center;max-width:70%}
-  .legenda{background:rgba(14,19,25,.85);border:1px solid var(--line);border-radius:8px;
-    padding:8px 10px;font-size:.72rem;color:var(--ink);line-height:1.8}
-  .legenda i{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:6px;vertical-align:-1px}
-  .legenda i.line{background:none !important;border-top:2px dashed #fff;height:0;vertical-align:3px}
-  .leaflet-control-scale-line{background:rgba(14,19,25,.8);color:var(--ink);border-color:var(--line)}
-  select:focus-visible,summary:focus-visible,input:focus-visible{outline:2px solid var(--b);outline-offset:2px}
-  @media(max-width:760px){#wrap{flex-direction:column;height:auto}
-    aside{width:auto;border-left:none;border-top:1px solid var(--line)}
-    #map{height:52vh;min-height:300px}}
+  :root {
+    --bg: #0e1116; --panel: #171c24; --line: #2a3340; --ink: #e7edf3;
+    --muted: #9fb0c0; --a: #f5a623; --b: #28c7ff; --neutral: #c7d3de;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; height: 100%; background: var(--bg); color: var(--ink);
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  }
+  
+  /* CABEÇALHO E MENU */
+  header { padding: 25px 20px; border-bottom: 1px solid var(--line); text-align: center; }
+  header h1 { margin: 10px 0 0; font-size: 1.4rem; font-weight: 650; }
+  header p { margin: 2px 0 0; color: var(--muted); font-size: .85rem; }
+  
+  .menu-topo { display: flex; justify-content: center; gap: 30px; margin-bottom: 15px; }
+  .menu-topo a { 
+    color: var(--muted); text-decoration: none; font-size: 0.85rem; 
+    text-transform: uppercase; letter-spacing: 1px; font-weight: 600; transition: 0.2s;
+  }
+  .menu-topo a:hover, .menu-topo a.ativo { color: var(--b); }
+
+  /* SISTEMA DE PÁGINAS (TABS) */
+  .page { display: none; }
+  .page.active { display: block; }
+  #page-projetos.active { display: flex; flex-direction: column; }
+
+  /* PÁGINA INÍCIO */
+  #page-inicio.active { 
+    display: flex; align-items: center; justify-content: center; 
+    min-height: calc(100vh - 86px); 
+    background: linear-gradient(rgba(14, 17, 22, 0.7), rgba(14, 17, 22, 0.95)), url('https://images.unsplash.com/photo-1524661135-423995f22d0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+  }
+  .inicio-layout { text-align: center; max-width: 800px; padding: 40px 20px; z-index: 1; }
+  .inicio-layout h2 { font-size: 2.6rem; color: #ffffff; margin-bottom: 25px; text-shadow: 0 2px 15px rgba(0,0,0,0.6); }
+  .inicio-layout p { font-size: 1.15rem; color: #e7edf3; line-height: 1.7; margin-bottom: 20px; text-shadow: 0 1px 8px rgba(0,0,0,0.6); }
+  .btn-start { 
+    background: var(--b); color: #000; border: none; padding: 12px 25px; 
+    font-size: 1rem; font-weight: 600; border-radius: 6px; cursor: pointer; 
+    transition: 0.2s; margin-top: 15px; 
+  }
+  .btn-start:hover { background: #1eb4e6; transform: scale(1.05); }
+
+  /* PÁGINA PROJETOS (MAPA E GRELHA) */
+  #wrap { display: flex; flex-direction: column; height: auto; }
+  #map { 
+    width: 100%; height: 60vh; min-height: 450px; 
+    background: #0b0e12; border-bottom: 1px solid var(--line); 
+  }
+  aside { 
+    width: 100%; max-width: 900px; /* Largura reduzida para centrar a leitura */
+    margin: 0 auto; background: transparent; 
+    padding: 50px 20px; overflow: visible; 
+    display: flex; flex-direction: column; /* Coloca os painéis uns debaixo dos outros */
+    gap: 40px; /* Muito mais espaço entre cada bloco */
+  }
+  
+  /* COMPONENTES DO PAINEL */
+  .block { margin-bottom: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+  .block h2 { 
+    font-size: .85rem; text-transform: uppercase; letter-spacing: 1.5px;
+    color: var(--muted); margin: 0 0 15px; display: flex; align-items: center; gap: 8px; font-weight: 700;
+  }
+  .sel { display: flex; gap: 15px; }
+  .sel label { flex: 1; font-size: .85rem; color: var(--muted); font-weight: 500; }
+  select { 
+    width: 100%; margin-top: 6px; background: #0e1319; color: var(--ink);
+    border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; font-size: 1rem; cursor: pointer; transition: 0.2s;
+  }
+  select:hover { border-color: var(--muted); }
+  .periodo { margin-top: 15px; font-size: .85rem; color: var(--muted); line-height: 1.4; }
+  .toggles { margin-top: 15px; display: flex; flex-direction: column; gap: 10px; font-size: .9rem; }
+  .toggles label { display: flex; align-items: center; gap: 10px; cursor: pointer; color: var(--ink); transition: 0.2s; }
+  .toggles label:hover { color: #fff; }
+  .swatch { display: inline-block; width: 14px; height: 14px; border-radius: 3px; }
+  .swatch.line { background: none; border-top: 2px dashed #e7edf3; border-radius: 0; width: 18px; height: 0; }
+  
+  .areas { display: flex; gap: 15px; }
+  .card { flex: 1; background: #0b0e12; border: 1px solid var(--line); border-radius: 10px; padding: 18px; display: flex; flex-direction: column; justify-content: center; }
+  .card .val { font-size: 1.8rem; font-weight: 700; line-height: 1.2; color: var(--ink); }
+  .card .unc { font-size: .8rem; color: var(--muted); margin-top: 4px; }
+  .card .lab { font-size: .85rem; color: var(--muted); margin-top: 6px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+  
+  .delta { margin-top: 15px; background: #0b0e12; border: 1px solid var(--line); border-radius: 10px; padding: 20px; }
+  .delta .big { font-size: 1.7rem; font-weight: 700; color: var(--neutral); }
+  .delta .frase { font-size: .95rem; color: var(--ink); margin-top: 10px; line-height: 1.5; font-weight: 500; }
+  .delta .ctx { font-size: .8rem; color: var(--muted); margin-top: 8px; line-height: 1.4; }
+  .delta .foot { font-size: .75rem; color: var(--muted); margin-top: 12px; opacity: .7; line-height: 1.4; border-top: 1px solid var(--line); padding-top: 10px; }
+  
+  .infobtn { 
+    background: #0e1319; border: 1px solid var(--line); color: var(--muted); border-radius: 50%;
+    width: 22px; height: 22px; font-size: .75rem; line-height: 1; cursor: pointer; padding: 0; font-weight: bold; transition: 0.2s;
+  }
+  .infobtn:hover { background: var(--line); color: #fff; }
+  .infobtn:focus-visible { outline: 2px solid var(--b); outline-offset: 2px; }
+  
+  #chart { margin-top: 10px; }
+  #chart svg { width: 100%; height: auto; display: block; overflow: visible; }
+  
+  .valrow { display: flex; gap: 10px; }
+  .valrow .card { text-align: center; }
+  .valrow .card .val { font-size: 1.25rem; }
+  
+  details.meth { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 0; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+  details.meth summary { 
+    cursor: pointer; padding: 22px 25px; font-size: .85rem; text-transform: uppercase;
+    letter-spacing: 1.5px; color: var(--muted); list-style: none; font-weight: 700;
+  }
+  details.meth summary::-webkit-details-marker { display: none; }
+  details.meth summary::after { content: "▸"; float: right; font-size: 1.2rem; }
+  details.meth[open] summary::after { content: "▾"; }
+  details.meth .body { padding: 0 25px 25px; }
+  
+  .note { font-size: .85rem; color: var(--muted); line-height: 1.6; margin: 0; }
+  .note + .note { margin-top: 12px; }
+  .note b { color: var(--ink); font-weight: 600; }
+  dl.meta { margin: 0; font-size: .85rem; color: var(--muted); line-height: 1.6; }
+  dl.meta dt { color: var(--ink); font-weight: 600; margin-top: 12px; }
+  dl.meta dd { margin: 0; }
+  
+  #status { 
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    color: var(--muted); font-size: .9rem; text-align: center; max-width: 70%; z-index: 1000; 
+  }
+  .legenda { 
+    background: rgba(14,19,25,.85); border: 1px solid var(--line); border-radius: 8px;
+    padding: 8px 10px; font-size: .72rem; color: var(--ink); line-height: 1.8; 
+  }
+  .legenda i { display: inline-block; width: 11px; height: 11px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+  .legenda i.line { background: none !important; border-top: 2px dashed #fff; height: 0; vertical-align: 3px; }
+  .leaflet-control-scale-line { background: rgba(14,19,25,.8); color: var(--ink); border-color: var(--line); }
+  select:focus-visible, summary:focus-visible, input:focus-visible { outline: 2px solid var(--b); outline-offset: 2px; }
+
+  .src { font-size: .85rem; color: var(--muted); line-height: 1.6; margin: 0; }
+  .note a { color: var(--b); }
+
+  /* PÁGINA AUTOR */
+  .autor-layout { 
+    display: flex; flex-wrap: wrap; gap: 40px; align-items: flex-start; justify-content: center; 
+    max-width: 1000px; margin: 50px auto; background: var(--panel); border: 1px solid var(--line); 
+    border-radius: 9px; padding: 40px; 
+  }
+  .autor-img { 
+    width: 220px; height: 220px; border-radius: 50%; object-fit: cover; 
+    border: 3px solid var(--line); box-shadow: 0 8px 24px rgba(0,0,0,0.4); 
+  }
+  .autor-info { flex: 1; min-width: 300px; }
+
+  /* MENU DE PROJETOS (GALERIA) */
+  .projetos-layout { max-width: 1000px; margin: 50px auto; padding: 20px; text-align: center; }
+  .projetos-layout h2 { font-size: 2rem; margin-bottom: 30px; color: var(--ink); }
+  .projetos-grid { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+  
+  .projeto-card {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 9px;
+    padding: 30px 20px; width: 320px; cursor: pointer; transition: transform 0.2s, border-color 0.2s;
+    text-align: left; display: flex; flex-direction: column;
+  }
+  .projeto-card:hover { transform: translateY(-5px); border-color: var(--b); }
+  .projeto-card h3 { margin: 0 0 10px 0; color: var(--ink); font-size: 1.2rem; }
+  .projeto-card p { color: var(--muted); font-size: 0.85rem; line-height: 1.5; flex: 1; margin: 0 0 20px 0; }
+  .projeto-card .btn-ver { color: var(--b); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; }
+  
+  .projeto-card.placeholder { opacity: 0.5; cursor: default; }
+  .projeto-card.placeholder:hover { transform: none; border-color: var(--line); }
+
+  /* ==========================================
+     RESPONSIVIDADE (TELEMÓVEIS E TABLETS)
+  ========================================== */
+  @media (max-width: 768px) {
+    header { padding: 15px 10px; }
+    header h1 { font-size: 1.2rem; margin-top: 5px; }
+    header p { font-size: 0.75rem; }
+    
+    .menu-topo { gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
+    .menu-topo a { font-size: 0.8rem; }
+    
+    .inicio-layout h2 { font-size: 1.8rem; margin-bottom: 15px; }
+    .inicio-layout p { font-size: 1rem; margin-bottom: 15px; }
+    
+    #map { height: 50vh; min-height: 350px; }
+    aside { padding: 25px 15px; gap: 25px; }
+    
+    /* Empilha formulários e cartões que estavam lado a lado */
+    .sel { flex-direction: column; gap: 10px; }
+    .areas { flex-direction: column; gap: 10px; }
+    .valrow { flex-direction: column; gap: 10px; }
+    
+    .projeto-card { width: 100%; max-width: 400px; padding: 20px 15px; }
+    
+    .autor-layout { padding: 25px 20px; gap: 20px; text-align: center; }
+    .autor-img { width: 160px; height: 160px; }
+    .autor-info { min-width: 100%; }
+    .autor-info a { justify-content: center; } /* Centra o link do LinkedIn no telemóvel */
+  }
+
 </style>
 </head>
 <body>
+
 <header>
-  <h1>Monsaraz em Mudança · Superfície de Água do Alqueva</h1>
-  <p>Freguesia de Monsaraz · 3.º trimestre (julho–setembro) · 2017–2025</p>
+  <nav class="menu-topo">
+    <a href="#" class="ativo" data-target="page-inicio">Início</a>
+    <a href="#" data-target="page-lista-projetos">Projetos</a>
+    <a href="#" data-target="page-autor">Autor</a>
+  </nav>
+  <h1>Gustavo Santa · Portfólio Geoespacial</h1>
+  <p>Projetos independentes de Sistemas de Informação Geográfica, Deteção Remota e Automação</p>
 </header>
 
-<div id="wrap">
-  <div id="map"><div id="status">A carregar dados…</div></div>
-  <aside>
-    <details class="meth block" open>
-      <summary>Sobre o projeto</summary>
-      <div class="body">
-        <p class="note">Projeto independente de <b>Gustavo Santa</b> para analisar e comunicar a
-        evolução da superfície de água do Alqueva na freguesia de Monsaraz, combinando
-        processamento geoespacial, análise temporal e uma aplicação web interativa.</p>
-        <dl class="meta" style="margin-top:10px">
-          <dt>O que desenvolvi</dt><dd>Todo o <i>pipeline</i> de processamento (Python + Google
-          Earth Engine): seleção e composição das imagens, deteção e vetorização da água, cálculo
-          dos indicadores, controlo de qualidade, verificação de consistência e esta aplicação web.</dd>
-          <dt>Dados externos utilizados</dt><dd>Imagens Sentinel-2 (ESA/Copernicus); limite da
-          freguesia da CAOP (DGT); JRC Global Surface Water, usado como comparação.</dd>
-          <dt>Como verifiquei os resultados</dt><dd>Comparação de consistência com o JRC (outro produto
-          ótico, não verdade de terreno) e quantificação da sensibilidade ao limiar. Validação
-          independente (área vs. cota da albufeira, EDIA/SNIRH) em preparação.</dd>
-          <dt>Limitações</dt><dd>Indicador de superfície (não de volume); incerteza de margem ao
-          nível do pixel; ainda sem validação independente da classificação. Ver
-          <i>Dados e metodologia</i>.</dd>
+<main id="main-content">
+  
+  <!-- ==================== PÁGINA 1: INÍCIO ==================== -->
+  <!-- Adicionada a classe "active" aqui para ser a página inicial por defeito -->
+  <div id="page-inicio" class="page active">
+    <div class="inicio-layout">
+      <h2>Análise do Território e Deteção Remota</h2>
+      <p>Bem-vindo ao meu portfólio. Este espaço tem como objetivo partilhar projetos independentes focados na monitorização, planeamento e modelação do território.</p>
+      <p>Através da combinação de Sistemas de Informação Geográfica (SIG), imagens de satélite e automação em Python, procuro extrair conhecimento geoespacial e comunicar as dinâmicas da paisagem de forma acessível e interativa.</p>
+      <button class="btn-start" onclick="abrirPagina('page-lista-projetos')">Explorar Projetos</button>
+    </div>
+  </div>
+
+
+  <!-- ==================== PÁGINA 2A: LISTA DE PROJETOS ==================== -->
+  <!-- Removida a classe "active" daqui -->
+  <div id="page-lista-projetos" class="page">
+    <div class="projetos-layout">
+      <h2>Portfólio de Projetos</h2>
+      <div class="projetos-grid">
+        
+        <!-- CARTÃO 1: PROJETO MONSARAZ -->
+        <div class="projeto-card" onclick="abrirPagina('page-projeto-monsaraz')">
+          <h3>Monsaraz em Mudança</h3>
+          <p>Monitorização da evolução da superfície de água do Alqueva na freguesia de Monsaraz entre 2017 e 2025, usando imagens de satélite Sentinel-2.</p>
+          <span class="btn-ver">Abrir Projeto →</span>
+        </div>
+
+        <!-- =========================================================================
+             COMO ADICIONAR UM NOVO CARTÃO DE PROJETO (PASSO 1)
+             1. Copia o bloco de código abaixo (removendo as setas de comentário <!-- e -- >).
+             2. Altera o "page-novo-projeto" para um ID único (ex: "page-projeto-incendios").
+             3. Altera o Título e a Descrição.
+        ========================================================================== -->
+        <!-- 
+        <div class="projeto-card" onclick="abrirPagina('page-novo-projeto')">
+          <h3>Nome do Novo Projeto</h3>
+          <p>Breve descrição do que faz este projeto de análise espacial ou deteção remota.</p>
+          <span class="btn-ver">Abrir Projeto →</span>
+        </div> 
+        -->
+
+        <!-- CARTÃO PLACEHOLDER (Para mostrar que vêm aí mais) -->
+        <div class="projeto-card placeholder">
+          <h3>Em Breve</h3>
+          <p>Novos projetos de análise geoespacial e deteção remota serão adicionados aqui no futuro.</p>
+          <span class="btn-ver" style="color:var(--muted)">A aguardar...</span>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==================== PÁGINA 2B: PROJETO MONSARAZ (CONTEÚDO) ==================== -->
+  <!-- Cada projeto tem a sua própria "div" (caixa) com a classe "page" e um ID único -->
+  <div id="page-projeto-monsaraz" class="page">
+    <div style="text-align: center; padding: 20px 20px 10px;">
+      <h2 style="margin: 0; font-size: 1.3rem; color: var(--ink);">Monsaraz em Mudança · Superfície de Água do Alqueva</h2>
+      <p style="margin: 5px 0 0; color: var(--muted); font-size: 0.85rem;">Freguesia de Monsaraz · 3.º trimestre (julho–setembro) · 2017–2025</p>
+    </div>
+
+    <div id="wrap">
+      <div id="map"><div id="status">A carregar dados…</div></div>
+      <aside>
+        <div class="block">
+          <h2>Comparar duas datas</h2>
+          <div class="sel">
+            <label for="selA">Data A<select id="selA"></select></label>
+            <label for="selB">Data B<select id="selB"></select></label>
+          </div>
+          <p class="periodo" id="periodoTxt">Comparação limitada ao 3.º trimestre (julho–setembro).</p>
+          <div class="toggles">
+            <label><input type="checkbox" id="tgA" checked><span class="swatch" style="background:var(--a)"></span>Superfície de água — Data A</label>
+            <label><input type="checkbox" id="tgB" checked><span class="swatch" style="background:var(--b)"></span>Superfície de água — Data B</label>
+            <label><input type="checkbox" id="tgLim" checked><span class="swatch line"></span>Limite da freguesia</label>
+          </div>
+        </div>
+
+        <div class="block">
+          <h2>Superfície de água na freguesia
+            <button class="infobtn" id="infoUnc" aria-expanded="false" aria-controls="uncExpl" title="O que significa o ±?">i</button>
+          </h2>
+          <div class="areas">
+            <div class="card"><div class="val" id="areaA">—</div><div class="unc" id="uncA"></div><div class="lab" id="labA">Data A</div></div>
+            <div class="card"><div class="val" id="areaB">—</div><div class="unc" id="uncB"></div><div class="lab" id="labB">Data B</div></div>
+          </div>
+          <div id="uncExpl" hidden style="margin-top:9px">
+            <p class="note"><b>Limiar ±:</b> quanto a área varia se o limiar do MNDWI mudar em ±0,05.
+            Mede a robustez à escolha do limiar.</p>
+            <p class="note"><b>Margem, até ±:</b> pior caso dos pixéis mistos na margem. O MNDWI usa a
+            banda B11 (20 m nativos); se todos os pixéis de margem estivessem errados em meio pixel no
+            mesmo sentido, a área mudaria até este valor (comprimento da margem × 10 m). Se os erros
+            forem aleatórios, anulam-se quase por completo (&lt;1 ha).</p>
+            <p class="note">Nenhum dos dois é um intervalo de confiança estatístico. São limites para
+            perceber que diferenças são robustas.</p>
+          </div>
+          <div class="delta">
+            <div class="big" id="deltaV">—</div>
+            <div class="frase" id="deltaFrase"></div>
+            <div class="ctx" id="deltaCtx"></div>
+            <div class="ctx" id="deltaUnc"></div>
+            <div class="foot">Áreas em hectares inteiros; a diferença é calculada a partir das áreas originais, antes do arredondamento.</div>
+          </div>
+        </div>
+
+        <div class="block">
+          <h2>Série sazonal 2017–2025 (trimestral)</h2>
+          <div id="chart"></div>
+          <p class="note" style="margin-top:6px">Cada ponto é um trimestre observado; os anéis
+          assinalam as duas datas (T3) em comparação. Passa o rato sobre um ponto para ver o valor.</p>
+        </div>
+
+        <details class="meth block" open>
+          <summary>Sobre o projeto</summary>
+          <div class="body">
+            <p class="note">Projeto independente de <b>Gustavo Santa</b> para analisar e comunicar a
+            evolução da superfície de água do Alqueva na freguesia de Monsaraz, combinando
+            processamento geoespacial, análise temporal e uma aplicação web interativa.</p>
+            <dl class="meta" style="margin-top:10px">
+              <dt>O que desenvolvi</dt><dd>Todo o <i>pipeline</i> de processamento (Python + Google
+              Earth Engine): seleção e composição das imagens, deteção e vetorização da água, cálculo
+              dos indicadores, controlo de qualidade, verificação de consistência e esta aplicação web.</dd>
+              <dt>Dados externos utilizados</dt><dd>Imagens Sentinel-2 (ESA/Copernicus); limite da
+              freguesia da CAOP (DGT); cota e volume do Alqueva do SNIRH (APA); JRC Global Surface
+              Water, usado como comparação.</dd>
+              <dt>Como verifiquei os resultados</dt><dd><b>Validação independente</b> com a cota e o
+              volume oficiais do Alqueva, medidos no terreno (SNIRH); comparação de consistência com o
+              JRC (outro produto ótico); e quantificação da incerteza (limiar e margem).</dd>
+              <dt>Limitações</dt><dd>O satélite mede a superfície de água; o volume só se estima em
+              <i>variações</i> (não vê o fundo). Vê cerca de 92% da área implícita no volume oficial,
+              de forma constante (enviesamento sistemático). Cerca de 8% das imagens dão resultados
+              anómalos, assinalados pela validação. Ver <i>Dados e metodologia</i>.</dd>
+            </dl>
+            <p class="note" style="margin-top:10px">Código aberto:
+            <a href="https://github.com/gustavosanta-star/monsaraz-agua-alqueva" style="color:var(--b)">github.com/gustavosanta-star/monsaraz-agua-alqueva</a></p>
+          </div>
+        </details>
+
+        <div class="block">
+          <h2>Validação independente: cota oficial do Alqueva
+            <button class="infobtn" id="infoInd" aria-expanded="false" aria-controls="indExpl" title="Como foi calculado?">i</button>
+          </h2>
+          <div class="valrow">
+            <div class="card"><div class="val" id="vR">—</div><div class="lab" id="vRlab">área vs. cota</div></div>
+            <div class="card"><div class="val" id="vDisp">—</div><div class="lab">dispersão de uma imagem</div></div>
+            <div class="card"><div class="val" id="vVol">—</div><div class="lab" id="vVollab">erro na série de volume</div></div>
+          </div>
+          <div id="chartCota" style="margin-top:16px"></div>
+          <p class="note" id="vNota" style="margin-top:6px"></p>
+          <div id="indExpl" hidden style="margin-top:9px">
+            <p class="note"><b>O que se compara:</b> a área de água do <b>Alqueva inteiro</b> (incluindo a
+            parte espanhola), medida em imagens Sentinel-2 de <b>datas únicas</b> com o lago quase todo
+            visível (menos de 50 ha sem dados), e a <b>cota oficial</b> medida no terreno no mesmo dia (ou
+            até 3 dias de diferença), na estação 24M/07A do SNIRH. Numa albufeira, a área inundada cresce
+            com o nível: se a área do satélite seguir a cota, o método está validado por uma fonte que
+            não depende de imagens.</p>
+            <p class="note"><b>Datas anómalas:</b> ajusta-se uma curva de 2.º grau e assinalam-se as datas
+            com desvio superior a 3,5 vezes a dispersão robusta (critério fixado à partida). São prováveis
+            erros de classificação (neblina, nuvens finas, água turva). Mostram-se as duas correlações:
+            com e sem essas datas.</p>
+            <p class="note"><b>Volume:</b> a variação de volume é ΔV = ∫A dh. Comparada com o volume
+            oficial (SNIRH, derivado do levantamento topográfico da albufeira), a área do satélite é
+            cerca de <b>92%</b> da área implícita no volume oficial, de forma constante em todas as cotas:
+            um enviesamento sistemático, provavelmente pixéis mistos da margem classificados como terra.
+            O satélite mede <b>variações</b> de volume, não o volume total: a série reconstruída parte de
+            um volume de referência.</p>
+            <p class="note"><b>Âmbito:</b> este teste usa o Alqueva inteiro, não só a freguesia de Monsaraz.</p>
+          </div>
+        </div>
+
+        <div class="block">
+          <h2>Consistência com o JRC Global Surface Water
+            <button class="infobtn" id="infoVal" aria-expanded="false" aria-controls="valExpl" title="Como foi calculado?">i</button>
+          </h2>
+          <div class="valrow">
+            <div class="card"><div class="val">92,7%</div><div class="lab">concordância espacial (IoU) — só julho 2020</div></div>
+            <div class="card"><div class="val">r = 0,80</div><div class="lab">correlação temporal — 41 meses (2017–2021)</div></div>
+          </div>
+          <div id="valExpl" hidden style="margin-top:9px">
+            <p class="note"><b>IoU (julho 2020):</b> sobreposição entre a água deste método e a do
+            JRC, dentro da freguesia, apenas sobre os pixéis que o JRC observou, à resolução do JRC
+            (30 m). Aplica-se só a essa data.</p>
+            <p class="note"><b>Correlação r (2017–2021):</b> 41 meses em que o JRC observou &gt;80%
+            da freguesia; em cada mês compara-se a área de água dos dois métodos sobre os mesmos
+            pixéis observados, a 30 m. Mede a concordância da <i>dinâmica</i>, não de datas isoladas.</p>
+            <p class="note"><b>Grelhas / sem dados:</b> tudo reduzido a 30 m; meses e pixéis sem
+            observação do JRC são excluídos, nunca contados como zero.</p>
+            <p class="note"><b>O que isto prova (e não prova):</b> o JRC também deriva de imagens
+            óticas (Landsat). A concordância mostra <b>consistência entre sensores</b>, não validação
+            independente: dois métodos óticos podem errar da mesma forma. O teste independente, com a
+            cota oficial, está no bloco anterior.</p>
+          </div>
+        </div>
+
+        <details class="meth block">
+          <summary>Dados e metodologia</summary>
+          <div class="body">
+            <dl class="meta">
+              <dt>Imagens</dt><dd>Copernicus Sentinel-2, produto L2A (reflectância de superfície), coleção <i>S2_SR_HARMONIZED</i>, via Google Earth Engine.</dd>
+              <dt>Composição temporal</dt><dd>Mediana por trimestre (3 meses); cada ano representado pelo 3.º trimestre (julho–setembro).</dd>
+              <dt>Nuvens e sombras</dt><dd>Máscara pela banda SCL (removidas: sem dados, saturado, sombra de nuvem, nuvem média/alta, cirrus).</dd>
+              <dt>Identificação da água</dt><dd>Índice MNDWI = (B3 − B11) / (B3 + B11).</dd>
+              <dt>Limiar</dt><dd>Água: MNDWI &gt; 0.</dd>
+              <dt>Pós-processamento</dt><dd>Vetorização da máscara e simplificação (tolerância 10 m).</dd>
+              <dt>Referência e áreas</dt><dd>Cálculo em ETRS89/PT-TM06 (EPSG:3763); dados servidos em WGS84.</dd>
+              <dt>Limite administrativo</dt><dd>CAOP — Direção-Geral do Território. Versão exata: <i>por confirmar</i>.</dd>
+              <dt>Validação independente</dt><dd>Área do Alqueva inteiro em imagens de datas únicas
+              (2017–2025) vs. cota oficial do SNIRH (estação 24M/07A); curva de 2.º grau com rejeição
+              robusta de datas anómalas (3,5 × MAD). Volume: ΔV = ∫A dh, comparado com o volume oficial
+              (2 registos oficiais anómalos excluídos pelo mesmo critério).</dd>
+              <dt>Consistência (JRC)</dt><dd>JRC Global Surface Water (Pekel et al., 2016): IoU 92,7% (julho 2020); r = 0,80 (41 meses com &gt;80% de cobertura JRC, 2017–2021).</dd>
+              <dt>Incerteza</dt><dd>Dois termos, nenhum deles intervalo de confiança estatístico.
+              (1) Sensibilidade ao limiar MNDWI (±0,05): ≈ ±15 ha (~1,3% da área).
+              (2) Pixéis mistos na margem: 46–54 km de margem dentro da freguesia, na grelha de 20 m
+              da B11; pior caso (meio pixel sistemático) ≈ ±46–54 ha (~4%); com erros aleatórios
+              &lt;1 ha. Um enviesamento sistemático afeta as duas datas no mesmo sentido e anula-se em
+              grande parte na diferença.</dd>
+              <dt>Água fora da albufeira</dt><dd>Charcas e pequenas barragens, identificadas com uma
+              envolvente do Alqueva derivada da extensão máxima do JRC: 0,2–1,0 ha no T3 (&lt;0,1%).
+              Efeito desprezável; não removidas.</dd>
+              <dt>Data de processamento</dt><dd>Outubro–novembro de 2026.</dd>
+            </dl>
+            <p class="note" style="margin-top:12px"><b>Nota:</b> a comparação descreve diferenças
+            na superfície de água detetada. Não determina, por si só, as causas dessas diferenças.</p>
+          </div>
+        </details>
+
+        <div class="block">
+          <h2>Fontes</h2>
+          <p class="src">Imagens: contém dados <b>Copernicus Sentinel</b> modificados (2017–2025), processados via Google Earth Engine.<br>
+          Cota e volume do Alqueva: <b>SNIRH</b> — Agência Portuguesa do Ambiente, I.P.<br>
+          Comparação: <b>JRC Global Surface Water</b> (Pekel et al., 2016).<br>
+          Limite administrativo: <b>CAOP</b> — Direção-Geral do Território.<br>
+          Base cartográfica: Esri, Maxar, Earthstar Geographics.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+
+  <!-- =========================================================================
+       COMO ADICIONAR O CONTEÚDO DO NOVO PROJETO (PASSO 2)
+       1. Copia o bloco de código abaixo (removendo os <!-- ).
+       2. O 'id' tem de ser IGUAL ao nome que puseste no onclick do Cartão (Passo 1).
+       3. Coloca aqui dentro os teus mapas, textos ou gráficos.
+  ========================================================================== -->
+  <!--
+  <div id="page-novo-projeto" class="page">
+    <div style="text-align: center; padding: 20px;">
+      <h2>O Meu Novo Projeto</h2>
+      <p>Desenvolvido em Python e GEE.</p>
+    </div>
+    
+    <div style="max-width: 1000px; margin: 0 auto; padding: 20px;">
+      <p>Aqui podes colocar imagens, texto, ou criar uma 'div' com um id="map2" para abrires um segundo mapa Leaflet.</p>
+    </div>
+  </div>
+  -->
+
+
+  <!-- ==================== PÁGINA 3: AUTOR ==================== -->
+  <div id="page-autor" class="page">
+    <div class="autor-layout">
+      <img src="./1665609831856.jpg" alt="Gustavo Santa" class="autor-img">
+      
+      <div class="autor-info">
+        <h2 style="font-size: 1.8rem; margin: 0 0 5px 0; color: var(--ink);">Gustavo Santa</h2>
+        
+        <a href="https://www.linkedin.com/in/gustavo-santa-56b2b3244/" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-bottom: 20px; color: var(--b); text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+          </svg>
+          Ver Perfil no LinkedIn
+        </a>
+
+        <p class="note">Second Lieutenant at the Portuguese Army Geospatial Centre (CIGeoE), where I have worked since 2023 on geospatial data production for the Multinational Geospatial Co-Production Program (MGCP), an international effort to produce standardised geospatial data.</p>
+        <p class="note">My work covers the full production chain: acquiring and editing vector data, validating it against international standards, and automating repetitive processes with Python. More recently, I have been applying Deep Learning to cartographic production, exploring how semantic segmentation can speed up feature extraction from satellite imagery.</p>
+        <p class="note">My background in Spatial Planning gives me a view of geographic data beyond the map itself: how it supports decisions about territory, infrastructure and resources.</p>
+        
+        <dl class="meta" style="margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line);">
+          <dt style="margin-top:0;">Core skills</dt>
+          <dd>
+            <ul style="margin: 8px 0 15px; padding-left: 20px; font-size: 0.78rem; color: var(--muted); line-height: 1.6;">
+              <li>Geospatial data production and quality control</li>
+              <li>GIS automation with Python, ArcGIS Pro and arcpy</li>
+              <li>Spatial analysis and multi-criteria modelling</li>
+              <li>Deep Learning for remote sensing</li>
+              <li>SQL and spatial databases</li>
+            </ul>
+          </dd>
+          <dt>Education</dt>
+          <dd style="margin-top: 5px; color: var(--ink);">
+            BSc in Spatial Planning, Universidade de Lisboa <br> 
+            <span style="color:var(--muted);">MSc candidate in GIS & Territorial Modelling, Universidade de Lisboa</span>
+          </dd>
         </dl>
-        <p class="note" style="margin-top:10px">Código aberto:
-        <a href="https://github.com/gustavosanta-star/monsaraz-agua-alqueva" style="color:var(--b)">github.com/gustavosanta-star/monsaraz-agua-alqueva</a></p>
-      </div>
-    </details>
-
-    <div class="block">
-      <h2>Comparar duas datas</h2>
-      <div class="sel">
-        <label for="selA">Data A<select id="selA"></select></label>
-        <label for="selB">Data B<select id="selB"></select></label>
-      </div>
-      <p class="periodo" id="periodoTxt">Comparação limitada ao 3.º trimestre (julho–setembro).</p>
-      <div class="toggles">
-        <label><input type="checkbox" id="tgA" checked><span class="swatch" style="background:var(--a)"></span>Superfície de água — Data A</label>
-        <label><input type="checkbox" id="tgB" checked><span class="swatch" style="background:var(--b)"></span>Superfície de água — Data B</label>
-        <label><input type="checkbox" id="tgLim" checked><span class="swatch line"></span>Limite da freguesia</label>
       </div>
     </div>
+  </div>
 
-    <div class="block">
-      <h2>Superfície de água na freguesia
-        <button class="infobtn" id="infoUnc" aria-expanded="false" aria-controls="uncExpl" title="O que significa o ±?">i</button>
-      </h2>
-      <div class="areas">
-        <div class="card"><div class="val" id="areaA">—</div><div class="unc" id="uncA"></div><div class="lab" id="labA">Data A</div></div>
-        <div class="card"><div class="val" id="areaB">—</div><div class="unc" id="uncB"></div><div class="lab" id="labB">Data B</div></div>
-      </div>
-      <div id="uncExpl" hidden style="margin-top:9px">
-        <p class="note"><b>Limiar ±:</b> quanto a área varia se o limiar do MNDWI mudar em ±0,05.
-        Mede a robustez à escolha do limiar.</p>
-        <p class="note"><b>Margem, até ±:</b> pior caso dos pixéis mistos na margem. O MNDWI usa a
-        banda B11 (20 m nativos); se todos os pixéis de margem estivessem errados em meio pixel no
-        mesmo sentido, a área mudaria até este valor (comprimento da margem × 10 m). Se os erros
-        forem aleatórios, anulam-se quase por completo (&lt;1 ha).</p>
-        <p class="note">Nenhum dos dois é um intervalo de confiança estatístico. São limites para
-        perceber que diferenças são robustas.</p>
-      </div>
-      <div class="delta">
-        <div class="big" id="deltaV">—</div>
-        <div class="frase" id="deltaFrase"></div>
-        <div class="ctx" id="deltaCtx"></div>
-        <div class="ctx" id="deltaUnc"></div>
-        <div class="foot">Áreas em hectares inteiros; a diferença é calculada a partir das áreas originais, antes do arredondamento.</div>
-      </div>
-    </div>
-
-    <div class="block">
-      <h2>Série sazonal 2017–2025 (trimestral)</h2>
-      <div id="chart"></div>
-      <p class="note" style="margin-top:6px">Cada ponto é um trimestre observado; os anéis
-      assinalam as duas datas (T3) em comparação. Passa o rato sobre um ponto para ver o valor.</p>
-    </div>
-
-    <div class="block">
-      <h2>Consistência com o JRC Global Surface Water
-        <button class="infobtn" id="infoVal" aria-expanded="false" aria-controls="valExpl" title="Como foi calculado?">i</button>
-      </h2>
-      <div class="valrow">
-        <div class="card"><div class="val">92,7%</div><div class="lab">concordância espacial (IoU) — só julho 2020</div></div>
-        <div class="card"><div class="val">r = 0,80</div><div class="lab">correlação temporal — 41 meses (2017–2021)</div></div>
-      </div>
-      <div id="valExpl" hidden style="margin-top:9px">
-        <p class="note"><b>IoU (julho 2020):</b> sobreposição entre a água deste método e a do
-        JRC, dentro da freguesia, apenas sobre os pixéis que o JRC observou, à resolução do JRC
-        (30 m). Aplica-se só a essa data.</p>
-        <p class="note"><b>Correlação r (2017–2021):</b> 41 meses em que o JRC observou &gt;80%
-        da freguesia; em cada mês compara-se a área de água dos dois métodos sobre os mesmos
-        pixéis observados, a 30 m. Mede a concordância da <i>dinâmica</i>, não de datas isoladas.</p>
-        <p class="note"><b>Grelhas / sem dados:</b> tudo reduzido a 30 m; meses e pixéis sem
-        observação do JRC são excluídos, nunca contados como zero.</p>
-        <p class="note"><b>O que isto prova (e não prova):</b> o JRC também deriva de imagens
-        óticas (Landsat). A concordância mostra <b>consistência entre sensores</b>, não validação
-        independente: dois métodos óticos podem errar da mesma forma. O teste independente
-        previsto é cruzar a área com a cota da albufeira (EDIA/SNIRH).</p>
-      </div>
-    </div>
-
-    <details class="meth block">
-      <summary>Dados e metodologia</summary>
-      <div class="body">
-        <dl class="meta">
-          <dt>Imagens</dt><dd>Copernicus Sentinel-2, produto L2A (reflectância de superfície), coleção <i>S2_SR_HARMONIZED</i>, via Google Earth Engine.</dd>
-          <dt>Composição temporal</dt><dd>Mediana por trimestre (3 meses); cada ano representado pelo 3.º trimestre (julho–setembro).</dd>
-          <dt>Nuvens e sombras</dt><dd>Máscara pela banda SCL (removidas: sem dados, saturado, sombra de nuvem, nuvem média/alta, cirrus).</dd>
-          <dt>Identificação da água</dt><dd>Índice MNDWI = (B3 − B11) / (B3 + B11).</dd>
-          <dt>Limiar</dt><dd>Água: MNDWI &gt; 0.</dd>
-          <dt>Pós-processamento</dt><dd>Vetorização da máscara e simplificação (tolerância 10 m).</dd>
-          <dt>Referência e áreas</dt><dd>Cálculo em ETRS89/PT-TM06 (EPSG:3763); dados servidos em WGS84.</dd>
-          <dt>Limite administrativo</dt><dd>CAOP — Direção-Geral do Território. Versão exata: <i>por confirmar</i>.</dd>
-          <dt>Consistência (JRC)</dt><dd>JRC Global Surface Water (Pekel et al., 2016): IoU 92,7% (julho 2020); r = 0,80 (41 meses com &gt;80% de cobertura JRC, 2017–2021).</dd>
-          <dt>Incerteza</dt><dd>Dois termos, nenhum deles intervalo de confiança estatístico.
-          (1) Sensibilidade ao limiar MNDWI (±0,05): ≈ ±15 ha (~1,3% da área).
-          (2) Pixéis mistos na margem: 46–54 km de margem dentro da freguesia, na grelha de 20 m
-          da B11; pior caso (meio pixel sistemático) ≈ ±46–54 ha (~4%); com erros aleatórios
-          &lt;1 ha. Um enviesamento sistemático afeta as duas datas no mesmo sentido e anula-se em
-          grande parte na diferença.</dd>
-          <dt>Água fora da albufeira</dt><dd>Charcas e pequenas barragens, identificadas com uma
-          envolvente do Alqueva derivada da extensão máxima do JRC: 0,2–1,0 ha no T3 (&lt;0,1%).
-          Efeito desprezável; não removidas.</dd>
-          <dt>Data de processamento</dt><dd>Outubro de 2026.</dd>
-        </dl>
-        <p class="note" style="margin-top:12px"><b>Nota:</b> a comparação descreve diferenças
-        na superfície de água detetada. Não determina, por si só, as causas dessas diferenças.</p>
-      </div>
-    </details>
-
-    <div class="block">
-      <h2>Fontes</h2>
-      <p class="src">Imagens: <b>Copernicus Sentinel-2</b> (ESA), via Google Earth Engine.<br>
-      Comparação: <b>JRC Global Surface Water</b> (Pekel et al., 2016).<br>
-      Limite administrativo: <b>CAOP</b> — Direção-Geral do Território.<br>
-      Base cartográfica: Esri, Maxar, Earthstar Geographics.</p>
-    </div>
-  </aside>
-</div>
+</main>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
+/* =======================================================================
+   LÓGICA GERAL (MENU E NAVEGAÇÃO)
+======================================================================= */
+function abrirPagina(targetId) {
+  // Desmarca os botões do menu
+  document.querySelectorAll('.menu-topo a').forEach(l => l.classList.remove('ativo'));
+  
+  // Marca de azul o menu correspondente
+  const linkAtivo = document.querySelector(`.menu-topo a[data-target="${targetId}"]`);
+  if (linkAtivo) {
+    linkAtivo.classList.add('ativo');
+  } else if (targetId.startsWith('page-projeto-')) {
+    // Se abrir qualquer projeto, mantém o menu "Projetos" ativo
+    document.querySelector(`.menu-topo a[data-target="page-lista-projetos"]`).classList.add('ativo');
+  }
+
+  // Esconde todas as páginas e mostra apenas a selecionada
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(targetId).classList.add('active');
+
+  // REGRA DE OURO PARA MAPAS LEAFLET:
+  // Se a página que se abriu tiver um mapa Leaflet, temos de dizer ao mapa
+  // para recalcular o tamanho dele (porque ele não sabe qual é o seu tamanho
+  // enquanto está escondido).
+  // Na primeira abertura, volta também a enquadrar a freguesia (o enquadramento
+  // calculado com o mapa escondido não é válido) e redesenha o gráfico à largura real.
+  if(targetId === 'page-projeto-monsaraz') {
+    setTimeout(() => {
+      if (typeof map === 'undefined') return;
+      map.invalidateSize();
+      if (!window._mapaEnquadrado && camada.limite) {
+        map.fitBounds(camada.limite.getBounds(), {padding:[20,20]});
+        window._mapaEnquadrado = true;
+      }
+      try { drawChart(+document.getElementById('selA').value, +document.getElementById('selB').value); drawCota(); } catch(e) {}
+    }, 100);
+  }
+
+  // Guarda a página no endereço (ex.: …/#projeto-monsaraz), para se poder partilhar
+  // um link direto e o botão "voltar" do browser funcionar.
+  const hash = '#' + targetId.replace(/^page-/, '');
+  if (location.hash !== hash) history.pushState(null, '', hash);
+  /*
+  // Se no futuro adicionares um 'map2', tens de o validar aqui também:
+  if(targetId === 'page-novo-projeto') {
+    setTimeout(() => { if (typeof map2 !== 'undefined') map2.invalidateSize(); }, 100);
+  }
+  */
+}
+
+document.querySelectorAll('.menu-topo a').forEach(link => {
+  link.addEventListener('click', function(e) {
+    e.preventDefault();
+    abrirPagina(this.getAttribute('data-target'));
+  });
+});
+
+// Abrir a página indicada no endereço (link direto) e reagir ao botão "voltar".
+function abrirDoEndereco() {
+  const id = 'page-' + location.hash.slice(1);
+  if (location.hash && document.getElementById(id)) abrirPagina(id);
+  else if (!location.hash) abrirPagina('page-inicio');
+}
+window.addEventListener('popstate', abrirDoEndereco);
+
+
+/* =======================================================================
+   LÓGICA ESPECÍFICA DO PROJETO: MONSARAZ (CARREGAMENTO DE DADOS E MAPA)
+======================================================================= */
 const ANOS=[2017,2018,2019,2020,2021,2022,2023,2024,2025];
 const TRIM=3;                                  // os dados do mapa são do 3.º trimestre
 const NOME_TRI={1:"1.º trimestre (janeiro–março)",2:"2.º trimestre (abril–junho)",
@@ -243,7 +612,7 @@ function updateLegenda(a,b){ if(!legDiv) return;
   legDiv.innerHTML=`<i style="background:${corA}"></i>Água — ${a} · T3<br>`
                   +`<i style="background:${corB}"></i>Água — ${b} · T3<br>`
                   +`<i class="line"></i>Limite da freguesia`; }
-window.addEventListener('resize',()=>map.invalidateSize());
+window.addEventListener('resize',()=>{ map.invalidateSize(); try{ drawChart(+document.getElementById('selA').value,+document.getElementById('selB').value); drawCota(); }catch(e){} });
 
 // camadas persistentes + estado de visibilidade (trocar datas não repõe o que foi ocultado)
 const camada={limite:null,A:null,B:null};
@@ -288,6 +657,8 @@ function periodo(ano){return `${ano} · ${NOME_TRI[TRIM]}`;}
     ib.onclick=()=>{const h=ex.hidden; ex.hidden=!h; ib.setAttribute('aria-expanded',String(h));};
     const vb=document.getElementById('infoVal'), vx=document.getElementById('valExpl');
     vb.onclick=()=>{const h=vx.hidden; vx.hidden=!h; vb.setAttribute('aria-expanded',String(h));};
+    const ibi=document.getElementById('infoInd'), ixi=document.getElementById('indExpl');
+    ibi.onclick=()=>{const h=ixi.hidden; ixi.hidden=!h; ibi.setAttribute('aria-expanded',String(h));};
 
     document.getElementById('status')?.remove();
     render();
@@ -298,6 +669,9 @@ function periodo(ano){return `${ano} · ${NOME_TRI[TRIM]}`;}
       render();}).catch(()=>{});
     fetch('incerteza.csv').then(r=>{if(!r.ok)throw 0;return r.text();}).then(t=>{
       parseCSV(t).forEach(r=>incert[+r.ano]=+r.incerteza_ha); render();}).catch(()=>{});
+    Promise.all([fetch('resumo_validacao.json').then(r=>{if(!r.ok)throw 0;return r.json();}),
+                 fetch('area_cota_ajuste.csv').then(r=>{if(!r.ok)throw 0;return r.text();})])
+      .then(([res,t])=>{ validacao={res, pts:parseCSV(t)}; preencherValidacao(); }).catch(()=>{});
     fetch('margem.csv').then(r=>{if(!r.ok)throw 0;return r.text();}).then(t=>{
       parseCSV(t).forEach(r=>margem[+r.ano]=+r.sistematico_ha); render();}).catch(()=>{});
   }catch(err){
@@ -321,25 +695,68 @@ function setAgua(key,ano,cor){
 
 function drawChart(a,b){
   const el=document.getElementById('chart'); if(!serie.length){el.innerHTML='';return;}
-  const W=360,H=210,ml=46,mr=10,mt=12,mb=26;
+  const W=Math.max(320,Math.round(el.clientWidth||420)),H=Math.round(Math.min(320,Math.max(230,W*0.36))),ml=58,mr=15,mt=15,mb=30;
   const ys=serie.map(d=>d.area);
   const ymin=Math.floor(Math.min(...ys)/50)*50,ymax=Math.ceil(Math.max(...ys)/50)*50;
   const X=i=>ml+i*(W-ml-mr)/(serie.length-1), Y=v=>mt+(ymax-v)/(ymax-ymin)*(H-mt-mb);
   let g='';
   [ymin,(ymin+ymax)/2,ymax].forEach(v=>{
-    g+=`<line x1="${ml}" y1="${Y(v)}" x2="${W-mr}" y2="${Y(v)}" stroke="#2a3340"/>`;
-    g+=`<text x="${ml-6}" y="${Y(v)+3}" fill="#9fb0c0" font-size="9" text-anchor="end">${v}</text>`;});
+    g+=`<line x1="${ml}" y1="${Y(v)}" x2="${W-mr}" y2="${Y(v)}" stroke="#2a3340" stroke-width="1.5" stroke-dasharray="4 4"/>`;
+    g+=`<text x="${ml-10}" y="${Y(v)+4}" fill="#9fb0c0" font-size="11" text-anchor="end" font-weight="500">${v}</text>`;});
   // rótulo do eixo Y
-  g+=`<text transform="translate(11,${H/2}) rotate(-90)" fill="#9fb0c0" font-size="9" text-anchor="middle">Superfície de água (ha)</text>`;
+  g+=`<text transform="translate(14,${H/2}) rotate(-90)" fill="#9fb0c0" font-size="11" font-weight="600" text-anchor="middle">Superfície de água (ha)</text>`;
   serie.forEach((d,i)=>{ if(d.tri===1)
-    g+=`<text x="${X(i)}" y="${H-8}" fill="#9fb0c0" font-size="9" text-anchor="middle">'${String(d.ano).slice(2)}</text>`;});
-  g+=`<polyline points="${serie.map((d,i)=>X(i)+','+Y(d.area)).join(' ')}" fill="none" stroke="#5a7a95" stroke-width="1.5"/>`;
+    g+=`<text x="${X(i)}" y="${H-5}" fill="#9fb0c0" font-size="11" font-weight="500" text-anchor="middle">'${String(d.ano).slice(2)}</text>`;});
+  g+=`<polyline points="${serie.map((d,i)=>X(i)+','+Y(d.area)).join(' ')}" fill="none" stroke="#5a7a95" stroke-width="2.5"/>`;
   serie.forEach((d,i)=>{ const u=(d.tri===3&&incert[d.ano]!=null)?` · ±${Math.round(incert[d.ano])} ha`:'';
-    g+=`<circle cx="${X(i)}" cy="${Y(d.area)}" r="2.6" fill="#8aa6bd"><title>${d.ano} · ${d.tri}.º trim · ${fmt(d.area)} ha${u}</title></circle>`;});
+    g+=`<circle cx="${X(i)}" cy="${Y(d.area)}" r="3.5" fill="#8aa6bd" style="cursor:pointer"><title>${d.ano} · ${d.tri}.º trim · ${fmt(d.area)} ha${u}</title></circle>`;});
   const ring=(ano,cor)=>{const i=serie.findIndex(d=>d.ano===ano&&d.tri===3);
-    return i<0?'':`<circle cx="${X(i)}" cy="${Y(serie[i].area)}" r="5" fill="none" stroke="${cor}" stroke-width="2.5"/>`;};
+    return i<0?'':`<circle cx="${X(i)}" cy="${Y(serie[i].area)}" r="7" fill="none" stroke="${cor}" stroke-width="3.5"/>`;};
   g+=ring(a,corA)+ring(b,corB);
   el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${g}</svg>`;
+}
+
+
+// ---- validação independente (área vs. cota oficial) ----
+let validacao=null;
+function nPT(x,d){return Number(x).toLocaleString('pt-PT',{minimumFractionDigits:d,maximumFractionDigits:d});}
+function preencherValidacao(){
+  if(!validacao) return;
+  const f1=validacao.res.fase1_area_cota, f2=validacao.res.fase2_volume;
+  document.getElementById('vR').textContent='r = '+nPT(f1.r_sem_anomalas,2);
+  document.getElementById('vRlab').textContent=`área vs. cota — ${f1.datas_na_curva} de ${f1.datas_utilizaveis} datas`;
+  document.getElementById('vDisp').textContent=`±${nPT(f1.dispersao_ha,0)} ha (${nPT(f1.dispersao_pct,1)}%)`;
+  document.getElementById('vVol').textContent=nPT(f2.serie_rmse_pct,1)+'%';
+  document.getElementById('vVollab').textContent=`erro na série de volume (${nPT(f2.serie_rmse_hm3,0)} hm³)`;
+  document.getElementById('vNota').textContent=
+    `${f1.datas_na_curva} de ${f1.datas_utilizaveis} datas seguem a curva; ${f1.datas_anomalas} `+
+    `(${nPT(100*f1.datas_anomalas/f1.datas_utilizaveis,0)}%) são assinaladas como anómalas (círculos vazios). `+
+    `Com todas as datas, r = ${nPT(f1.r_todas,2)}. Passa o rato sobre um ponto para ver a data.`;
+  drawCota();
+}
+function drawCota(){
+  const el=document.getElementById('chartCota'); if(!validacao||!el) return;
+  const pts=validacao.pts.map(p=>({d:p.data,h:+p.cota_m,a:+p.agua_ha,an:p.anomala==='sim'}));
+  const cv=validacao.res.fase1_area_cota.curva, A=h=>cv.c[0]+cv.c[1]*(h-cv.h0)+cv.c[2]*(h-cv.h0)**2;
+  const W=Math.max(320,Math.round(el.clientWidth||420)),H=Math.round(Math.min(340,Math.max(240,W*0.42))),ml=62,mr=15,mt=12,mb=40;
+  const ok=pts.filter(p=>!p.an);
+  const hmin=Math.floor(Math.min(...pts.map(p=>p.h))), hmax=Math.ceil(Math.max(...pts.map(p=>p.h)));
+  const amin=Math.floor((Math.min(...ok.map(p=>p.a))-2000)/1000)*1000, amax=Math.ceil((Math.max(...ok.map(p=>p.a))+500)/1000)*1000;
+  const X=h=>ml+(h-hmin)/(hmax-hmin)*(W-ml-mr), Y=a=>mt+(amax-Math.max(a,amin))/(amax-amin)*(H-mt-mb);
+  let g='';
+  for(let a=amin;a<=amax;a+=2000){
+    g+=`<line x1="${ml}" y1="${Y(a)}" x2="${W-mr}" y2="${Y(a)}" stroke="#2a3340" stroke-dasharray="4 4"/>`;
+    g+=`<text x="${ml-8}" y="${Y(a)+4}" fill="#9fb0c0" font-size="11" text-anchor="end">${nPT(a,0)}</text>`;}
+  for(let h=hmin;h<=hmax;h++) g+=`<text x="${X(h)}" y="${H-mb+16}" fill="#9fb0c0" font-size="11" text-anchor="middle">${h}</text>`;
+  g+=`<text x="${(ml+W-mr)/2}" y="${H-4}" fill="#9fb0c0" font-size="11" font-weight="600" text-anchor="middle">Cota oficial da albufeira (m)</text>`;
+  g+=`<text transform="translate(14,${(mt+H-mb)/2}) rotate(-90)" fill="#9fb0c0" font-size="11" font-weight="600" text-anchor="middle">Área de água do Alqueva (ha)</text>`;
+  let c=''; for(let i=0;i<=60;i++){const h=hmin+(hmax-hmin)*i/60; c+=(i?' ':'')+X(h)+','+Y(A(h));}
+  g+=`<polyline points="${c}" fill="none" stroke="#e7edf3" stroke-width="2" opacity=".8"/>`;
+  pts.forEach(p=>{ const fora=p.a<amin?' (abaixo da escala)':'';
+    g+= p.an
+      ? `<circle cx="${X(p.h)}" cy="${Y(p.a)}" r="4.5" fill="none" stroke="#ff8a8a" stroke-width="1.8"><title>${p.d} · ${nPT(p.a,0)} ha · cota ${nPT(p.h,2)} m · anómala${fora}</title></circle>`
+      : `<circle cx="${X(p.h)}" cy="${Y(p.a)}" r="3.5" fill="#28c7ff" opacity=".75"><title>${p.d} · ${nPT(p.a,0)} ha · cota ${nPT(p.h,2)} m</title></circle>`; });
+  el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Área de água do Alqueva em função da cota oficial">${g}</svg>`;
 }
 
 function render(){
@@ -382,6 +799,36 @@ function render(){
   updateLegenda(a,b);
   try{ drawChart(a,b); }catch(e){ console.warn('gráfico:',e); }
 }
+
+
+/* =======================================================================
+   MANUAL PARA ADICIONAR UM NOVO PROJETO (PASSO 3 - JAVASCRIPT)
+   Quando o Gustavo adicionar um projeto novo (ex: Incêndios em Leiria),
+   é aqui em baixo que ele vai escrever o código JS para esse projeto.
+
+   REGRAS DE OURO:
+   1. Os "IDs" no HTML têm de ser únicos!
+      Se ele criar um mapa novo para os incêndios, no HTML ele cria a:
+      <div id="map2"></div>
+   
+   2. E depois aqui no JavaScript inicializa-o assim:
+      const map2 = L.map('map2').setView([LEIRIA_LAT, LEIRIA_LON], 12);
+      L.tileLayer('URL_DO_MAPA_AQUI').addTo(map2);
+
+   3. As variáveis não podem ter nomes repetidos.
+      Como lá em cima já usámos "const ANOS = [...]", aqui em baixo ele
+      terá de usar "const ANOS_INCENDIO = [...]".
+
+   4. Lembrar de atualizar a função "abrirPagina()" lá em cima para
+      fazer o "map2.invalidateSize();" (explicado nos comentários da função).
+======================================================================= */
+
+// [O CÓDIGO DO NOVO PROJETO ENTRA DAQUI PARA BAIXO]
+
+
+// Abrir a página do endereço só no fim, quando todo o código acima já existe.
+if (location.hash) abrirDoEndereco();
+
 </script>
 </body>
 </html>
