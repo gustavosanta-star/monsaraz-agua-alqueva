@@ -1,0 +1,124 @@
+{
+  "_descricao": "Albufeiras da bacia do Guadiana (PT) com cota diária no SNIRH (APA, I.P.). site = código interno do SNIRH; lat/lon = localização da estação (na barragem). Amplitude = variação da cota 2017–2025 (percentis 2–98). Campo opcional caixa = [lon_min, lat_min, lon_max, lat_max] para limitar a procura da envolvente e excluir = [[lon_min, lat_min, lon_max, lat_max], ...] para retirar zonas (passo 14).",
+  "parametros_snirh": {
+    "cota_m": "1629599726",
+    "volume_dam3": "1866"
+  },
+  "albufeiras": [
+    {
+      "id": "alqueva",
+      "nome": "Alqueva",
+      "site": "1627743416",
+      "codigo": "24M/07A",
+      "lat": 38.197,
+      "lon": -7.495,
+      "volume": true,
+      "amplitude_m": 8.8
+    },
+    {
+      "id": "pedrogao",
+      "nome": "Pedrógão",
+      "site": "1627758944",
+      "codigo": "25L/01A",
+      "lat": 38.109,
+      "lon": -7.631,
+      "volume": false,
+      "amplitude_m": 4.8,
+      "caixa": [
+        -7.8,
+        38.06,
+        -7.4,
+        38.196
+      ],
+      "nota": "caixa cortada a norte na barragem do Alqueva (38,196 N); excluído o rio a jusante do açude (a oeste/sul da estação)",
+      "excluir": [
+        [
+          -7.8,
+          38.06,
+          -7.63,
+          38.111
+        ]
+      ]
+    },
+    {
+      "id": "caia",
+      "nome": "Caia",
+      "site": "1627743648",
+      "codigo": "20O/01A",
+      "lat": 39.0011,
+      "lon": -7.1437,
+      "volume": true,
+      "amplitude_m": 15.3
+    },
+    {
+      "id": "abrilongo",
+      "nome": "Abrilongo",
+      "site": "1627743354",
+      "codigo": "19O/01A",
+      "lat": 39.096,
+      "lon": -7.121,
+      "volume": true,
+      "amplitude_m": 9.7
+    },
+    {
+      "id": "lucefecit",
+      "nome": "Lucefécit",
+      "site": "1627758752",
+      "codigo": "22M/01A",
+      "lat": 38.6361,
+      "lon": -7.4074,
+      "volume": true,
+      "amplitude_m": 16.9
+    },
+    {
+      "id": "vigia",
+      "nome": "Vigia",
+      "site": "1627759534",
+      "codigo": "22L/01A",
+      "lat": 38.5391,
+      "lon": -7.6078,
+      "volume": true,
+      "amplitude_m": 18.2
+    },
+    {
+      "id": "monte_novo",
+      "nome": "Monte Novo",
+      "site": "1627758834",
+      "codigo": "22K/01A",
+      "lat": 38.5263,
+      "lon": -7.7286,
+      "volume": true,
+      "amplitude_m": 5.2
+    },
+    {
+      "id": "enxoe",
+      "nome": "Enxoé",
+      "site": "1627752188",
+      "codigo": "26M/01A",
+      "lat": 37.9931,
+      "lon": -7.4639,
+      "volume": true,
+      "amplitude_m": 4.5
+    },
+    {
+      "id": "odeleite",
+      "nome": "Odeleite",
+      "site": "1627758894",
+      "codigo": "30L/01A",
+      "lat": 37.3286,
+      "lon": -7.4862,
+      "volume": true,
+      "amplitude_m": 16.7
+    },
+    {
+      "id": "beliche",
+      "nome": "Beliche",
+      "site": "1627743538",
+      "codigo": "30L/02A",
+      "lat": 37.2737,
+      "lon": -7.5098,
+      "volume": true,
+      "amplitude_m": 18.0
+    }
+  ]
+}

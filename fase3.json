@@ -1,0 +1,126 @@
+{
+ "albufeiras": [
+  {
+   "id": "alqueva",
+   "nome": "Alqueva",
+   "area_ha": 24603,
+   "razao": 1.01,
+   "r": 0.987,
+   "erro_pct": 2.2,
+   "erro_var_pct": 5.0,
+   "erro_antigo_pct": 3.4,
+   "datas": 148,
+   "nota": ""
+  },
+  {
+   "id": "pedrogao",
+   "nome": "Pedrógão",
+   "area_ha": 1211,
+   "razao": null,
+   "r": 0.951,
+   "erro_pct": null,
+   "erro_var_pct": null,
+   "erro_antigo_pct": null,
+   "datas": 128,
+   "nota": "sem volume no SNIRH"
+  },
+  {
+   "id": "caia",
+   "nome": "Caia",
+   "area_ha": 1866,
+   "razao": 0.982,
+   "r": 0.982,
+   "erro_pct": 7.1,
+   "erro_var_pct": 4.8,
+   "erro_antigo_pct": 8.3,
+   "datas": 449,
+   "nota": ""
+  },
+  {
+   "id": "abrilongo",
+   "nome": "Abrilongo",
+   "area_ha": 284,
+   "razao": 0.833,
+   "r": 0.992,
+   "erro_pct": 4.0,
+   "erro_var_pct": 2.8,
+   "erro_antigo_pct": 14.3,
+   "datas": 308,
+   "nota": ""
+  },
+  {
+   "id": "lucefecit",
+   "nome": "Lucefécit",
+   "area_ha": 177,
+   "razao": 0.833,
+   "r": 0.946,
+   "erro_pct": 18.6,
+   "erro_var_pct": 12.1,
+   "erro_antigo_pct": 20.0,
+   "datas": 392,
+   "nota": "núcleo muito pequeno (3 ha); cota oficial ruidosa"
+  },
+  {
+   "id": "vigia",
+   "nome": "Vigia",
+   "area_ha": 310,
+   "razao": 1.359,
+   "r": 0.969,
+   "erro_pct": 28.0,
+   "erro_var_pct": 11.1,
+   "erro_antigo_pct": 54.3,
+   "datas": 206,
+   "nota": "curva oficial de volume incoerente"
+  },
+  {
+   "id": "monte_novo",
+   "nome": "Monte Novo",
+   "area_ha": 322,
+   "razao": 0.896,
+   "r": 0.981,
+   "erro_pct": 5.4,
+   "erro_var_pct": 5.1,
+   "erro_antigo_pct": 15.9,
+   "datas": 239,
+   "nota": ""
+  },
+  {
+   "id": "enxoe",
+   "nome": "Enxoé",
+   "area_ha": 183,
+   "razao": 0.674,
+   "r": 0.969,
+   "erro_pct": 6.6,
+   "erro_var_pct": 7.4,
+   "erro_antigo_pct": 12.8,
+   "datas": 450,
+   "nota": "área do satélite a 67% da oficial em todas as cotas"
+  },
+  {
+   "id": "odeleite",
+   "nome": "Odeleite",
+   "area_ha": 752,
+   "razao": 0.941,
+   "r": 0.992,
+   "erro_pct": 4.8,
+   "erro_var_pct": 4.0,
+   "erro_antigo_pct": 16.0,
+   "datas": 444,
+   "nota": ""
+  },
+  {
+   "id": "beliche",
+   "nome": "Beliche",
+   "area_ha": 297,
+   "razao": 0.988,
+   "r": 0.993,
+   "erro_pct": 5.7,
+   "erro_var_pct": 3.9,
+   "erro_antigo_pct": 20.4,
+   "datas": 450,
+   "nota": ""
+  }
+ ],
+ "metodo": "NDWI (B3,B8) > -0,1 a 10 m, limiar calibrado só no Alqueva e no Caia; filtro: núcleo de água permanente (JRC) visto como água em >= 98 %.",
+ "fontes": "Área: Sentinel-2 (análise própria). Cota e volume: SNIRH (APA, I.P.). Envolventes e núcleo: JRC Global Surface Water."
+}

@@ -87,6 +87,43 @@ level to estimate volume changes, and compared with the official volume–level 
 The satellite measures **volume changes, not absolute volume**: it cannot see the reservoir bed, so
 an absolute series needs one reference volume.
 
+## Phase 3 — ten Guadiana reservoirs: volume from a single image
+
+The method was extended to the ten Portuguese reservoirs of the Guadiana basin with daily water level in SNIRH
+(`albufeiras.json`: adding a reservoir is one line). Each reservoir gets an envelope from the JRC maximum
+water extent (steps 13–15), and three things changed in the method after the multi-reservoir test:
+
+1. **Water index.** The original MNDWI at 20 m measured only 54–92% of the area implied by the official volume
+   curve: it misses the shoreline band (shallow, turbid or vegetated water). **NDWI (B3, B8; native 10 m) > −0.1**
+   brings it to 0.98–1.01 in the Alqueva and the Caia. The threshold was calibrated on those two only; the other
+   eight are a test, not a fit (steps 18–19).
+2. **Automatic image filter (no water level used).** The low-water core of each reservoir, from a Sentinel-2
+   median of its lowest 60-day window of 2017–2025, must be seen as water in ≥ 98%. A first version with a JRC
+   "permanent water" core wrongly rejected real droughts (Caia, autumn 2019); the Sentinel-2 core does not
+   (steps 17, 17b).
+3. **Official level validated.** Automatic level gauges have faults (multi-week drifts, jumps of several metres).
+   A date is used only if its level is consistent with the official volume or with neighbouring days (step 20).
+
+**Result** — volume from one image (area → level → volume), leave-one-year-out, filter only:
+
+| Reservoir | Area (ha) | Satellite / official area | r | Volume error (% of mean) | Old method |
+|---|---|---|---|---|---|
+| Alqueva | 24,603 | 1.01 | 0.99 | **2.2%** | 3.4% |
+| Abrilongo | 284 | 0.83 | 0.99 | **4.0%** | 14.3% |
+| Odeleite | 752 | 0.94 | 0.99 | **4.8%** | 16.0% |
+| Monte Novo | 322 | 0.90 | 0.98 | **5.4%** | 15.9% |
+| Beliche | 297 | 0.99 | 0.99 | **5.7%** | 20.4% |
+| Enxoé | 183 | 0.67 | 0.97 | **6.6%** | 12.8% |
+| Caia | 1,866 | 0.98 | 0.98 | **7.1%** | 8.3% |
+| Lucefécit | 177 | 0.83 | 0.95 | 18.6% | 20.0% |
+| Vigia | 310 | — (official curve inconsistent) | 0.97 | 28.0% | 54.3% |
+| Pedrógão | 1,211 | — (no volume in SNIRH) | 0.95 | — | — |
+
+**Limits.** Enxoé stays at 67% of the official area at all levels (outdated official curve or aquatic
+vegetation — not resolved). Lucefécit and Vigia have a tiny or no core and a noisy official level, so their error
+does not measure the method alone. The NDWI threshold and the 98% filter threshold were chosen after seeing the
+Alqueva data. The satellite measures volume changes; absolute volume needs one reference value.
+
 ## Uncertainty
 
 Two terms are reported. Neither is a statistical confidence interval.
@@ -157,6 +194,15 @@ Set your Earth Engine project id in the scripts, then run in order:
 | `10_snirh.py` | Downloads the official Alqueva water level and volume (SNIRH) |
 | `11_area_cota.py` | Whole-reservoir water area on single dates + matching official level |
 | `12_volume.py` | Area–level curve, anomaly flags, volume comparison (no GEE; plain Python) |
+| `12b_validacao_cruzada.py` | Volume from a single image, leave-one-year-out (Alqueva) |
+| `13_snirh_guadiana.py` | Official level and volume for all reservoirs in `albufeiras.json` |
+| `14_envolventes.py` | Envelope of each reservoir (JRC max extent) + check image |
+| `15_area_cota_multi.py` | Water area per date (MNDWI 20 m) + official level, all reservoirs |
+| `16_volume_multi.py` | Area–level and volume analysis, original method (superseded by step 20) |
+| `17_qualidade_imagem.py`, `17b_nucleo_s2.py` | Automatic image-quality filter (core water test; 17b = final) |
+| `18_resolucao.py` | Index/threshold/resolution test on clean dates |
+| `19_area_ndwi10.py` | Water area per date with NDWI at 10 m |
+| `20_analise_ndwi10.py` | Final analysis: level validation, filter, area ratio, leave-one-year-out volume error |
 
 Serve the web app locally (it reads the generated data files, so it needs a server — not a
 double-click):

@@ -202,6 +202,14 @@
     .autor-info a { justify-content: center; } /* Centra o link do LinkedIn no telemóvel */
   }
 
+    .tf3{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:12px}
+    .tf3 th,.tf3 td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+    .tf3 th:first-child,.tf3 td:first-child{text-align:left}
+    .tf3 th{color:var(--muted);font-weight:600;font-size:12px}
+    .tf3 th:last-child{text-align:left}
+    .tf3 td.nt{color:var(--muted);font-size:12px;text-align:left;white-space:normal;min-width:200px}
+    .tf3 tr.fraca td{color:var(--muted)}
+    .tf3wrap{overflow-x:auto}
 </style>
 </head>
 <body>
@@ -387,6 +395,38 @@
           </div>
         </div>
 
+        <div class="block" id="fase3">
+          <h2>Dez albufeiras do Guadiana: volume a partir de uma só imagem
+            <button class="infobtn" id="infoF3" aria-expanded="false" aria-controls="f3Expl" title="Como foi calculado?">i</button>
+          </h2>
+          <div class="valrow">
+            <div class="card"><div class="val" id="f3a">—</div><div class="lab" id="f3alab">albufeiras com erro de volume abaixo de 8%</div></div>
+            <div class="card"><div class="val" id="f3b">—</div><div class="lab">erro no Alqueva</div></div>
+            <div class="card"><div class="val" id="f3c">—</div><div class="lab">imagens analisadas</div></div>
+          </div>
+          <div class="tf3wrap"><table class="tf3" id="tabF3">
+            <thead><tr><th>Albufeira</th><th>Erro do volume</th><th>Método antigo</th><th>Satélite / oficial</th><th>r</th><th>Área (ha)</th><th>Nota</th></tr></thead>
+            <tbody></tbody></table></div>
+          <p class="note" style="margin-top:8px">Erro do volume estimado a partir de <b>uma só imagem</b> (área → cota →
+          volume), testado deixando um ano de fora de cada vez, em % do volume médio. Sem usar a cota oficial na
+          seleção das imagens: só o filtro automático do núcleo de água.</p>
+          <div id="f3Expl" hidden style="margin-top:9px">
+            <p class="note"><b>Método final:</b> água = NDWI (bandas B3 e B8, nativas de 10 m) &gt; −0,1, dentro do
+            contorno de cada albufeira (máximo histórico do JRC + 30 m). O limiar foi calibrado só no Alqueva e no
+            Caia; nas outras oito é um teste, não um ajuste. O método original (MNDWI a 20 m) perdia a faixa da
+            margem: media 54–92% da área implícita no volume oficial.</p>
+            <p class="note"><b>Filtro automático:</b> o centro de cada albufeira, definido pelo Sentinel-2 no período
+            de nível mais baixo de 2017–2025, tem de aparecer como água em ≥ 98%. Se não aparece, a imagem tem
+            neblina, nuvem fina ou reflexo e é rejeitada. Não confunde secas com imagens más.</p>
+            <p class="note"><b>Cota oficial validada:</b> os sensores de cota têm falhas (derivas de semanas, saltos
+            de vários metros). Só entram datas em que a cota é coerente com o volume oficial ou com os dias vizinhos.</p>
+            <p class="note"><b>Limites:</b> no Enxoé a área do satélite fica a 67% da oficial em todas as cotas, sem
+            explicação clara (curva oficial desatualizada ou vegetação aquática). No Lucefécit e na Vigia o núcleo
+            é minúsculo ou inexistente e a cota oficial é ruidosa: o erro não mede só o método. O satélite mede
+            variações de volume; o volume absoluto parte de um valor de referência.</p>
+          </div>
+        </div>
+
         <div class="block">
           <h2>Consistência com o JRC Global Surface Water
             <button class="infobtn" id="infoVal" aria-expanded="false" aria-controls="valExpl" title="Como foi calculado?">i</button>
@@ -437,7 +477,7 @@
               <dt>Água fora da albufeira</dt><dd>Charcas e pequenas barragens, identificadas com uma
               envolvente do Alqueva derivada da extensão máxima do JRC: 0,2–1,0 ha no T3 (&lt;0,1%).
               Efeito desprezável; não removidas.</dd>
-              <dt>Data de processamento</dt><dd>Outubro–novembro de 2026.</dd>
+              <dt>Data de processamento</dt><dd>Outubro–novembro de 2026 (Fase 3: novembro de 2026).</dd>
             </dl>
             <p class="note" style="margin-top:12px"><b>Nota:</b> a comparação descreve diferenças
             na superfície de água detetada. Não determina, por si só, as causas dessas diferenças.</p>
@@ -659,6 +699,9 @@ function periodo(ano){return `${ano} · ${NOME_TRI[TRIM]}`;}
     vb.onclick=()=>{const h=vx.hidden; vx.hidden=!h; vb.setAttribute('aria-expanded',String(h));};
     const ibi=document.getElementById('infoInd'), ixi=document.getElementById('indExpl');
     ibi.onclick=()=>{const h=ixi.hidden; ixi.hidden=!h; ibi.setAttribute('aria-expanded',String(h));};
+    const ib3=document.getElementById('infoF3'), ix3=document.getElementById('f3Expl');
+    ib3.onclick=()=>{const h=ix3.hidden; ix3.hidden=!h; ib3.setAttribute('aria-expanded',String(h));};
+    fetch('fase3.json').then(r=>{if(!r.ok)throw 0;return r.json();}).then(preencherFase3).catch(()=>{});
 
     document.getElementById('status')?.remove();
     render();
@@ -719,6 +762,21 @@ function drawChart(a,b){
 
 // ---- validação independente (área vs. cota oficial) ----
 let validacao=null;
+function preencherFase3(d){
+  const A=d.albufeiras, pct=x=>x==null?'—':nPT(x,1)+'%';
+  const comVol=A.filter(a=>a.erro_pct!=null);
+  const bons=comVol.filter(a=>a.erro_pct<8);
+  document.getElementById('f3a').textContent=bons.length+' de '+comVol.length;
+  const alq=A.find(a=>a.id==='alqueva'); if(alq) document.getElementById('f3b').textContent=pct(alq.erro_pct);
+  document.getElementById('f3c').textContent=nPT(A.reduce((s,a)=>s+a.datas,0),0);
+  const ord=[...A].sort((p,q)=>(p.erro_pct??99)-(q.erro_pct??99));
+  document.querySelector('#tabF3 tbody').innerHTML=ord.map(a=>{
+    const fraca=a.nota&&a.id!=='pedrogao'&&a.id!=='enxoe';
+    const raz=a.nota.startsWith('curva oficial')||a.razao==null?'—':nPT(a.razao,2);
+    return '<tr'+(fraca?' class="fraca"':'')+'><td>'+a.nome+'</td><td><b>'+pct(a.erro_pct)+'</b></td><td>'+pct(a.erro_antigo_pct)+
+      '</td><td>'+raz+'</td><td>'+(a.r==null?'—':nPT(a.r,2))+'</td><td>'+nPT(a.area_ha,0)+
+      '</td><td class="nt">'+(a.nota||'')+'</td></tr>';}).join('');
+}
 function nPT(x,d){return Number(x).toLocaleString('pt-PT',{minimumFractionDigits:d,maximumFractionDigits:d});}
 function preencherValidacao(){
   if(!validacao) return;
