@@ -153,6 +153,11 @@
     border: 3px solid var(--line); box-shadow: 0 8px 24px rgba(0,0,0,0.4); 
   }
   .autor-info { flex: 1; min-width: 300px; }
+  .lang-toggle { display: inline-flex; gap: 4px; margin: 0 0 14px; }
+  .lang-toggle button { background: transparent; border: 1px solid var(--line); color: var(--muted);
+    font: inherit; font-size: .75rem; font-weight: 600; padding: 3px 10px; border-radius: 4px; cursor: pointer; }
+  .lang-toggle button[aria-pressed="true"] { border-color: var(--b); color: var(--b); }
+  .bio[hidden] { display: none; }
 
   /* MENU DE PROJETOS (GALERIA) */
   .projetos-layout { max-width: 1000px; margin: 50px auto; padding: 20px; text-align: center; }
@@ -266,11 +271,11 @@
         </div> 
         -->
 
-        <!-- CARTÃO 2: ROTURA DE ALQUEVA (página externa, em inglês) -->
+        <!-- CARTÃO 2: ROTURA DE ALQUEVA (página externa) -->
         <div class="projeto-card" onclick="window.open('https://gustavosanta-star.github.io/rotura-alqueva/', '_blank', 'noopener')">
           <h3>Rotura de Alqueva: um cenário hipotético</h3>
           <p>E se Alqueva e Pedrógão rompessem? Uma simulação 2D em HEC-RAS e ArcGIS Pro segue a onda até Vila Real de Santo António e estima a perigosidade (h·v) e a população exposta dos dois lados da fronteira. Feita só com dados abertos.</p>
-          <span class="btn-ver">Abrir projeto (em inglês) ↗</span>
+          <span class="btn-ver">Abrir projeto ↗</span>
         </div>
 
         <!-- CARTÃO PLACEHOLDER (Para mostrar que vêm aí mais) -->
@@ -541,6 +546,34 @@
           Ver perfil no LinkedIn
         </a>
 
+        <div class="lang-toggle" role="group" aria-label="Idioma / Language">
+          <button type="button" data-lang="pt" aria-pressed="true">PT</button>
+          <button type="button" data-lang="en" aria-pressed="false">EN</button>
+        </div>
+        <div class="bio" lang="pt" data-bio="pt">
+        <p class="note">Alferes no Centro de Informação Geoespacial do Exército (CIGeoE), onde trabalho desde 2023 na produção de dados geoespaciais para o Multinational Geospatial Co-Production Program (MGCP), um programa internacional que produz dados geoespaciais normalizados.</p>
+        <p class="note">No dia a dia, isso quer dizer a cadeia de produção inteira: adquirir e editar dados vetoriais, validá-los segundo normas internacionais e escrever Python que nos tire das mãos as partes repetitivas. Ultimamente tenho aplicado deep learning à produção cartográfica, a testar se a segmentação semântica consegue acelerar a extração de elementos a partir de imagens de satélite.</p>
+        <p class="note">Formei-me em Ordenamento do Território, por isso tenho tendência a perguntar para que serve um mapa: que decisões sobre o território, as infraestruturas e os recursos vai acabar por apoiar.</p>
+        
+        <dl class="meta" style="margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line);">
+          <dt style="margin-top:0;">Competências</dt>
+          <dd>
+            <ul style="margin: 8px 0 15px; padding-left: 20px; font-size: 0.78rem; color: var(--muted); line-height: 1.6;">
+              <li>Produção e controlo de qualidade de dados geoespaciais</li>
+              <li>Automação SIG com Python, ArcGIS Pro e arcpy</li>
+              <li>Análise espacial e modelação multicritério</li>
+              <li>Deep learning para deteção remota</li>
+              <li>SQL e bases de dados espaciais</li>
+            </ul>
+          </dd>
+          <dt>Formação</dt>
+          <dd style="margin-top: 5px; color: var(--ink);">
+            Licenciatura em Ordenamento do Território, Universidade de Lisboa <br> 
+            <span style="color:var(--muted);">Mestrando em Sistemas de Informação Geográfica e Modelação Territorial, Universidade de Lisboa</span>
+          </dd>
+        </dl>
+        </div>
+        <div class="bio" lang="en" data-bio="en" hidden>
         <p class="note">Second Lieutenant at the Portuguese Army Geospatial Centre (CIGeoE), where since 2023 I have worked on geospatial data production for the Multinational Geospatial Co-Production Program (MGCP), an international programme that produces standardised geospatial data.</p>
         <p class="note">Day to day that means the whole production chain: acquiring and editing vector data, validating it against international standards, and writing Python to take the repetitive parts off our hands. Lately I have been applying deep learning to cartographic production, testing whether semantic segmentation can speed up feature extraction from satellite imagery.</p>
         <p class="note">I trained in Spatial Planning, so I tend to ask what a map is for: which decisions about land, infrastructure and resources it will end up supporting.</p>
@@ -562,12 +595,23 @@
             <span style="color:var(--muted);">MSc candidate in GIS & Territorial Modelling, Universidade de Lisboa</span>
           </dd>
         </dl>
+        </div>
       </div>
     </div>
   </div>
 
 </main>
 
+<script>
+// Bio do autor em PT/EN
+document.querySelectorAll('.lang-toggle button').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const l=btn.dataset.lang;
+    document.querySelectorAll('.lang-toggle button').forEach(b=>b.setAttribute('aria-pressed',String(b===btn)));
+    document.querySelectorAll('.bio').forEach(d=>{d.hidden=d.dataset.bio!==l;});
+  });
+});
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 /* =======================================================================
