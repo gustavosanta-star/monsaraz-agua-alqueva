@@ -153,6 +153,11 @@
     border: 3px solid var(--line); box-shadow: 0 8px 24px rgba(0,0,0,0.4); 
   }
   .autor-info { flex: 1; min-width: 300px; }
+  .lang-toggle { display: inline-flex; gap: 4px; }
+  .lang-toggle button { background: transparent; border: 1px solid var(--line); color: var(--muted);
+    font: inherit; font-size: .75rem; font-weight: 600; padding: 3px 10px; border-radius: 4px; cursor: pointer; }
+  .lang-toggle button[aria-pressed="true"] { border-color: var(--b); color: var(--b); }
+  .bio[hidden] { display: none; }
 
   /* MENU DE PROJETOS (GALERIA) */
   .projetos-layout { max-width: 1000px; margin: 50px auto; padding: 20px; text-align: center; }
@@ -216,12 +221,13 @@
 
 <header>
   <nav class="menu-topo">
-    <a href="#" class="ativo" data-target="page-inicio">Início</a>
-    <a href="#" data-target="page-lista-projetos">Projetos</a>
-    <a href="#" data-target="page-autor">Autor</a>
+    <a href="#" class="ativo" data-target="page-inicio" data-en="Home">Início</a>
+    <a href="#" data-target="page-lista-projetos" data-en="Projects">Projetos</a>
+    <a href="#" data-target="page-autor" data-en="About">Autor</a>
+    <span class="lang-toggle" role="group" aria-label="Idioma / Language"><button type="button" data-lang="pt" aria-pressed="true">PT</button><button type="button" data-lang="en" aria-pressed="false">EN</button></span>
   </nav>
-  <h1>Gustavo Santa · Portfólio Geoespacial</h1>
-  <p>Projetos independentes de Sistemas de Informação Geográfica, Deteção Remota e Automação</p>
+  <h1 data-en="Gustavo Santa · Geospatial Portfolio">Gustavo Santa · Portfólio Geoespacial</h1>
+  <p data-en="Independent projects in GIS, remote sensing and automation">Projetos independentes de SIG, deteção remota e automação</p>
 </header>
 
 <main id="main-content">
@@ -230,10 +236,10 @@
   <!-- Adicionada a classe "active" aqui para ser a página inicial por defeito -->
   <div id="page-inicio" class="page active">
     <div class="inicio-layout">
-      <h2>Análise do Território e Deteção Remota</h2>
-      <p>Bem-vindo ao meu portfólio. Este espaço tem como objetivo partilhar projetos independentes focados na monitorização, planeamento e modelação do território.</p>
-      <p>Através da combinação de Sistemas de Informação Geográfica (SIG), imagens de satélite e automação em Python, procuro extrair conhecimento geoespacial e comunicar as dinâmicas da paisagem de forma acessível e interativa.</p>
-      <button class="btn-start" onclick="abrirPagina('page-lista-projetos')">Explorar Projetos</button>
+      <h2 data-en="Land analysis and remote sensing">Análise do território e deteção remota</h2>
+      <p data-en="Hi, I&#x27;m Gustavo. This is where I keep the projects I work on in my own time about land and territory: how it changes, how to keep track of it and how to model it.">Olá, sou o Gustavo. Aqui junto os projetos que faço por conta própria sobre o território: como muda, como se acompanha e como se pode modelar.</p>
+      <p data-en="I work with GIS, satellite imagery and Python to understand what is happening in the landscape, and I try to present the results so that anyone can explore them for themselves.">Trabalho com SIG, imagens de satélite e Python para perceber o que está a acontecer na paisagem, e tento mostrar os resultados de maneira a que qualquer pessoa os possa explorar por si.</p>
+      <button class="btn-start" onclick="abrirPagina('page-lista-projetos')" data-en="See the projects">Ver os projetos</button>
     </div>
   </div>
 
@@ -242,14 +248,14 @@
   <!-- Removida a classe "active" daqui -->
   <div id="page-lista-projetos" class="page">
     <div class="projetos-layout">
-      <h2>Portfólio de Projetos</h2>
+      <h2 data-en="Projects">Projetos</h2>
       <div class="projetos-grid">
         
         <!-- CARTÃO 1: PROJETO MONSARAZ -->
         <div class="projeto-card" onclick="abrirPagina('page-projeto-monsaraz')">
           <h3>Monsaraz em Mudança</h3>
-          <p>Monitorização da evolução da superfície de água do Alqueva na freguesia de Monsaraz entre 2017 e 2025, usando imagens de satélite Sentinel-2.</p>
-          <span class="btn-ver">Abrir Projeto →</span>
+          <p data-en="How much of the Alqueva reservoir lies inside the parish of Monsaraz, and how did that change between 2017 and 2025? Measured summer by summer with Sentinel-2 imagery.">Quanta água do Alqueva cabe dentro da freguesia de Monsaraz, e como mudou entre 2017 e 2025? Medido verão a verão com imagens Sentinel-2.</p>
+          <span class="btn-ver" data-en="Open project →">Abrir projeto →</span>
         </div>
 
         <!-- =========================================================================
@@ -266,18 +272,18 @@
         </div> 
         -->
 
-        <!-- CARTÃO 2: ROTURA DE ALQUEVA (página externa, em inglês) -->
-        <div class="projeto-card" onclick="window.open('https://gustavosanta-star.github.io/rotura-alqueva/', '_blank', 'noopener')">
-          <h3>Rotura de Alqueva — Cenário Hipotético</h3>
-          <p>Simulação 2D (HEC-RAS e ArcGIS Pro) da rotura hipotética de Alqueva e Pedrógão: propagação da onda até Vila Real de Santo António, perigosidade (h·v) e população exposta em Portugal e Espanha. Apenas dados abertos.</p>
-          <span class="btn-ver">Abrir Projeto (em inglês) ↗</span>
+        <!-- CARTÃO 2: ROTURA DE ALQUEVA (página externa) -->
+        <div class="projeto-card" onclick="window.open('https://gustavosanta-star.github.io/rotura-alqueva/?lang='+LANG, '_blank', 'noopener')">
+          <h3 data-en="Alqueva dam break: a hypothetical scenario">Rotura de Alqueva: um cenário hipotético</h3>
+          <p data-en="What if the Alqueva and Pedrógão dams failed? A 2D simulation in HEC-RAS and ArcGIS Pro follows the flood wave down to Vila Real de Santo António and estimates the hazard (h·v) and the population exposed on both sides of the border. Built with open data only.">E se Alqueva e Pedrógão rompessem? Uma simulação 2D em HEC-RAS e ArcGIS Pro segue a onda até Vila Real de Santo António e estima a perigosidade (h·v) e a população exposta dos dois lados da fronteira. Feita só com dados abertos.</p>
+          <span class="btn-ver" data-en="Open project ↗">Abrir projeto ↗</span>
         </div>
 
         <!-- CARTÃO PLACEHOLDER (Para mostrar que vêm aí mais) -->
         <div class="projeto-card placeholder">
-          <h3>Em Breve</h3>
-          <p>Novos projetos de análise geoespacial e deteção remota serão adicionados aqui no futuro.</p>
-          <span class="btn-ver" style="color:var(--muted)">A aguardar...</span>
+          <h3 data-en="Coming soon">Em breve</h3>
+          <p data-en="More geospatial analysis and remote sensing projects are on the way.">Há mais projetos de análise geoespacial e deteção remota a caminho.</p>
+          <span class="btn-ver" style="color:var(--muted)" data-en="In progress">Em preparação</span>
         </div>
         
       </div>
@@ -289,169 +295,171 @@
   <!-- Cada projeto tem a sua própria "div" (caixa) com a classe "page" e um ID único -->
   <div id="page-projeto-monsaraz" class="page">
     <div style="text-align: center; padding: 20px 20px 10px;">
-      <h2 style="margin: 0; font-size: 1.3rem; color: var(--ink);">Monsaraz em Mudança · Superfície de Água do Alqueva</h2>
-      <p style="margin: 5px 0 0; color: var(--muted); font-size: 0.85rem;">Freguesia de Monsaraz · 3.º trimestre (julho–setembro) · 2017–2025</p>
+      <h2 style="margin: 0; font-size: 1.3rem; color: var(--ink);" data-en="Monsaraz em Mudança · Alqueva water surface">Monsaraz em Mudança · superfície de água do Alqueva</h2>
+      <p style="margin: 5px 0 0; color: var(--muted); font-size: 0.85rem;" data-en="Parish of Monsaraz · Q3 (July–September) · 2017–2025">Freguesia de Monsaraz · 3.º trimestre (julho–setembro) · 2017–2025</p>
     </div>
 
     <div id="wrap">
-      <div id="map"><div id="status">A carregar dados…</div></div>
+      <div id="map"><div id="status" data-en="Loading data…">A carregar dados…</div></div>
       <aside>
         <div class="block">
-          <h2>Comparar duas datas</h2>
+          <h2 data-en="Compare two dates">Comparar duas datas</h2>
           <div class="sel">
-            <label for="selA">Data A<select id="selA"></select></label>
-            <label for="selB">Data B<select id="selB"></select></label>
+            <label for="selA"><span data-en="Date A">Data A</span><select id="selA"></select></label>
+            <label for="selB"><span data-en="Date B">Data B</span><select id="selB"></select></label>
           </div>
-          <p class="periodo" id="periodoTxt">Comparação limitada ao 3.º trimestre (julho–setembro).</p>
+          <p class="periodo" id="periodoTxt" data-en="Comparison limited to Q3 (July–September).">Comparação limitada ao 3.º trimestre (julho–setembro).</p>
           <div class="toggles">
-            <label><input type="checkbox" id="tgA" checked><span class="swatch" style="background:var(--a)"></span>Superfície de água — Data A</label>
-            <label><input type="checkbox" id="tgB" checked><span class="swatch" style="background:var(--b)"></span>Superfície de água — Data B</label>
-            <label><input type="checkbox" id="tgLim" checked><span class="swatch line"></span>Limite da freguesia</label>
+            <label><input type="checkbox" id="tgA" checked><span class="swatch" style="background:var(--a)"></span><span data-en="Water on date A">Água na data A</span></label>
+            <label><input type="checkbox" id="tgB" checked><span class="swatch" style="background:var(--b)"></span><span data-en="Water on date B">Água na data B</span></label>
+            <label><input type="checkbox" id="tgLim" checked><span class="swatch line"></span><span data-en="Parish boundary">Limite da freguesia</span></label>
           </div>
         </div>
 
         <div class="block">
-          <h2>Superfície de água na freguesia
-            <button class="infobtn" id="infoUnc" aria-expanded="false" aria-controls="uncExpl" title="O que significa o ±?">i</button>
+          <h2><span data-en="Water surface in the parish">Superfície de água na freguesia</span>
+            <button class="infobtn" id="infoUnc" aria-expanded="false" aria-controls="uncExpl" title="O que significa o ±?" data-en-title="What does the ± mean?">i</button>
           </h2>
           <div class="areas">
             <div class="card"><div class="val" id="areaA">—</div><div class="unc" id="uncA"></div><div class="lab" id="labA">Data A</div></div>
             <div class="card"><div class="val" id="areaB">—</div><div class="unc" id="uncB"></div><div class="lab" id="labB">Data B</div></div>
           </div>
           <div id="uncExpl" hidden style="margin-top:9px">
-            <p class="note"><b>Limiar ±:</b> quanto a área varia se o limiar do MNDWI mudar em ±0,05.
-            Mede a robustez à escolha do limiar.</p>
-            <p class="note"><b>Margem, até ±:</b> pior caso dos pixéis mistos na margem. O MNDWI usa a
+            <p class="note" data-en="&lt;b&gt;Threshold ±:&lt;/b&gt; how much the area changes if the MNDWI threshold shifts by ±0.05. It shows how much the result depends on that choice."><b>Limiar ±:</b> quanto a área varia se o limiar do MNDWI mudar em ±0,05.
+            Mostra quanto o resultado depende dessa escolha.</p>
+            <p class="note" data-en="&lt;b&gt;Shoreline, up to ±:&lt;/b&gt; worst case for mixed pixels along the shore. MNDWI uses band B11 (native 20 m); if every shoreline pixel were off by half a pixel in the same direction, the area would change by up to this value (shoreline length × 10 m). If the errors are random, they almost completely cancel out (&amp;lt;1 ha)."><b>Margem, até ±:</b> pior caso dos pixéis mistos na margem. O MNDWI usa a
             banda B11 (20 m nativos); se todos os pixéis de margem estivessem errados em meio pixel no
             mesmo sentido, a área mudaria até este valor (comprimento da margem × 10 m). Se os erros
             forem aleatórios, anulam-se quase por completo (&lt;1 ha).</p>
-            <p class="note">Nenhum dos dois é um intervalo de confiança estatístico. São limites para
-            perceber que diferenças são robustas.</p>
+            <p class="note" data-en="Neither is a statistical confidence interval. They help you see which differences hold up and which may just be noise.">Nenhum dos dois é um intervalo de confiança estatístico. Servem para
+            perceber que diferenças se aguentam e quais podem ser só ruído.</p>
           </div>
           <div class="delta">
             <div class="big" id="deltaV">—</div>
             <div class="frase" id="deltaFrase"></div>
             <div class="ctx" id="deltaCtx"></div>
             <div class="ctx" id="deltaUnc"></div>
-            <div class="foot">Áreas em hectares inteiros; a diferença é calculada a partir das áreas originais, antes do arredondamento.</div>
+            <div class="foot" data-en="Areas in whole hectares; the difference is calculated from the original areas, before rounding.">Áreas em hectares inteiros; a diferença é calculada a partir das áreas originais, antes do arredondamento.</div>
           </div>
         </div>
 
         <div class="block">
-          <h2>Série sazonal 2017–2025 (trimestral)</h2>
+          <h2 data-en="Seasonal series 2017–2025 (quarterly)">Série sazonal 2017–2025 (trimestral)</h2>
           <div id="chart"></div>
-          <p class="note" style="margin-top:6px">Cada ponto é um trimestre observado; os anéis
-          assinalam as duas datas (T3) em comparação. Passa o rato sobre um ponto para ver o valor.</p>
+          <p class="note" style="margin-top:6px" data-en="Each point is an observed quarter, and the rings mark the two dates (Q3) you are comparing. Hover over a point to see its value.">Cada ponto é um trimestre observado, e os anéis marcam as duas datas (T3) que estás a
+          comparar. Passa o rato sobre um ponto para ver o valor.</p>
         </div>
 
         <details class="meth block" open>
-          <summary>Sobre o projeto</summary>
+          <summary data-en="About the project">Sobre o projeto</summary>
           <div class="body">
-            <p class="note">Projeto independente de <b>Gustavo Santa</b> para analisar e comunicar a
-            evolução da superfície de água do Alqueva na freguesia de Monsaraz, combinando
-            processamento geoespacial, análise temporal e uma aplicação web interativa.</p>
+            <p class="note" data-en="I did this project on my own initiative, to understand and show how the Alqueva&#x27;s water has varied inside the parish of Monsaraz. It combines geospatial processing, time-series analysis and this web app.">Fiz este projeto por iniciativa própria, para perceber e mostrar como tem
+            variado a água do Alqueva dentro da freguesia de Monsaraz. Junta processamento
+            geoespacial, análise temporal e esta aplicação web.</p>
             <dl class="meta" style="margin-top:10px">
-              <dt>O que desenvolvi</dt><dd>Todo o <i>pipeline</i> de processamento (Python + Google
+              <dt data-en="What I did">O que fiz</dt><dd data-en="The whole processing &lt;i&gt;pipeline&lt;/i&gt; (Python + Google Earth Engine): image selection and compositing, water detection and vectorisation, indicator calculation, quality control, consistency checks and this web app.">Todo o <i>pipeline</i> de processamento (Python + Google
               Earth Engine): seleção e composição das imagens, deteção e vetorização da água, cálculo
               dos indicadores, controlo de qualidade, verificação de consistência e esta aplicação web.</dd>
-              <dt>Dados externos utilizados</dt><dd>Imagens Sentinel-2 (ESA/Copernicus); limite da
+              <dt data-en="Data from other sources">Dados de outras fontes</dt><dd data-en="Sentinel-2 imagery (ESA/Copernicus); parish boundary from CAOP (DGT); Alqueva water level and volume from SNIRH (APA); JRC Global Surface Water, used for comparison.">Imagens Sentinel-2 (ESA/Copernicus); limite da
               freguesia da CAOP (DGT); cota e volume do Alqueva do SNIRH (APA); JRC Global Surface
               Water, usado como comparação.</dd>
-              <dt>Como verifiquei os resultados</dt><dd><b>Validação independente</b> com a cota e o
-              volume oficiais do Alqueva, medidos no terreno (SNIRH); comparação de consistência com o
-              JRC (outro produto ótico); e quantificação da incerteza (limiar e margem).</dd>
-              <dt>Limitações</dt><dd>O satélite mede a superfície de água; o volume só se estima em
-              <i>variações</i> (não vê o fundo). Vê cerca de 92% da área implícita no volume oficial,
-              de forma constante (enviesamento sistemático). Cerca de 8% das imagens dão resultados
-              anómalos, assinalados pela validação. Ver <i>Dados e metodologia</i>.</dd>
+              <dt data-en="How I checked the results">Como verifiquei os resultados</dt><dd data-en="I compared the area with the Alqueva&#x27;s official water level and volume, measured on site (SNIRH), which is the independent validation. I also compared it with JRC, another optical product, and quantified the uncertainty from the threshold and the shoreline.">Comparei a área com a cota e o volume oficiais do
+              Alqueva, medidos no terreno (SNIRH), que é a validação independente. Comparei também com o
+              JRC, outro produto ótico, e quantifiquei a incerteza do limiar e da margem.</dd>
+              <dt data-en="Limitations">Limitações</dt><dd data-en="The satellite sees the water surface but not the bottom, so volume can only be estimated as &lt;i&gt;changes&lt;/i&gt;. It sees about 92% of the area implied by the official volume, always in the same proportion, which points to a systematic bias. About 8% of images give anomalous results, and the validation flags them. More detail under &lt;i&gt;Data and methodology&lt;/i&gt;.">O satélite vê a superfície da água, mas não o fundo, por isso o
+              volume só se estima em <i>variações</i>. Vê cerca de 92% da área implícita no volume
+              oficial, sempre na mesma proporção, o que indica um enviesamento sistemático. Cerca de 8%
+              das imagens dão resultados anómalos, e a validação assinala-as. Mais detalhe em
+              <i>Dados e metodologia</i>.</dd>
             </dl>
-            <p class="note" style="margin-top:10px">Código aberto:
+            <p class="note" style="margin-top:10px"><span data-en="Open source:">Código aberto:</span>
             <a href="https://github.com/gustavosanta-star/monsaraz-agua-alqueva" style="color:var(--b)">github.com/gustavosanta-star/monsaraz-agua-alqueva</a></p>
           </div>
         </details>
 
         <div class="block">
-          <h2>Validação independente: cota oficial do Alqueva
-            <button class="infobtn" id="infoInd" aria-expanded="false" aria-controls="indExpl" title="Como foi calculado?">i</button>
+          <h2><span data-en="Independent validation: official Alqueva water level">Validação independente: cota oficial do Alqueva</span>
+            <button class="infobtn" id="infoInd" aria-expanded="false" aria-controls="indExpl" title="Como foi calculado?" data-en-title="How was it calculated?">i</button>
           </h2>
           <div class="valrow">
-            <div class="card"><div class="val" id="vR">—</div><div class="lab" id="vRlab">área vs. cota</div></div>
-            <div class="card"><div class="val" id="vDisp">—</div><div class="lab">dispersão de uma imagem</div></div>
-            <div class="card"><div class="val" id="vVol">—</div><div class="lab" id="vVollab">erro na série de volume</div></div>
+            <div class="card"><div class="val" id="vR">—</div><div class="lab" id="vRlab" data-en="area vs. water level">área vs. cota</div></div>
+            <div class="card"><div class="val" id="vDisp">—</div><div class="lab" data-en="single-image scatter">dispersão de uma imagem</div></div>
+            <div class="card"><div class="val" id="vVol">—</div><div class="lab" id="vVollab" data-en="volume series error">erro na série de volume</div></div>
           </div>
           <div id="chartCota" style="margin-top:16px"></div>
           <p class="note" id="vNota" style="margin-top:6px"></p>
           <div id="indExpl" hidden style="margin-top:9px">
-            <p class="note"><b>O que se compara:</b> a área de água do <b>Alqueva inteiro</b> (incluindo a
+            <p class="note" data-en="&lt;b&gt;What is compared:&lt;/b&gt; the water area of the &lt;b&gt;whole Alqueva&lt;/b&gt; (Spanish part included), measured on &lt;b&gt;single-date&lt;/b&gt; Sentinel-2 images with the lake almost fully visible (less than 50 ha without data), against the &lt;b&gt;official water level&lt;/b&gt; measured on site on the same day (or within 3 days), at SNIRH station 24M/07A. In a reservoir, the flooded area grows with the water level. If the area measured by the satellite tracks the level, the method is validated by a source that has nothing to do with imagery."><b>O que se compara:</b> a área de água do <b>Alqueva inteiro</b> (incluindo a
             parte espanhola), medida em imagens Sentinel-2 de <b>datas únicas</b> com o lago quase todo
             visível (menos de 50 ha sem dados), e a <b>cota oficial</b> medida no terreno no mesmo dia (ou
             até 3 dias de diferença), na estação 24M/07A do SNIRH. Numa albufeira, a área inundada cresce
-            com o nível: se a área do satélite seguir a cota, o método está validado por uma fonte que
-            não depende de imagens.</p>
-            <p class="note"><b>Datas anómalas:</b> ajusta-se uma curva de 2.º grau e assinalam-se as datas
+            com o nível. Se a área medida pelo satélite acompanhar a cota, o método fica validado por
+            uma fonte que nada tem a ver com imagens.</p>
+            <p class="note" data-en="&lt;b&gt;Anomalous dates:&lt;/b&gt; a second-degree curve is fitted and dates deviating by more than 3.5 times the robust scatter are flagged (a criterion set beforehand). They are probably classification errors (haze, thin cloud, turbid water). Both correlations are shown, with and without those dates."><b>Datas anómalas:</b> ajusta-se uma curva de 2.º grau e assinalam-se as datas
             com desvio superior a 3,5 vezes a dispersão robusta (critério fixado à partida). São prováveis
             erros de classificação (neblina, nuvens finas, água turva). Mostram-se as duas correlações:
             com e sem essas datas.</p>
-            <p class="note"><b>Volume:</b> a variação de volume é ΔV = ∫A dh. Comparada com o volume
+            <p class="note" data-en="&lt;b&gt;Volume:&lt;/b&gt; the volume change is ΔV = ∫A dh. Compared with the official volume (SNIRH, derived from the reservoir&#x27;s topographic survey), the satellite area is about &lt;b&gt;92%&lt;/b&gt; of the area implied by the official volume, constant across all water levels: a systematic bias, probably shoreline mixed pixels classified as land. Since the satellite only measures &lt;b&gt;changes&lt;/b&gt; in volume, the reconstructed series starts from a reference volume."><b>Volume:</b> a variação de volume é ΔV = ∫A dh. Comparada com o volume
             oficial (SNIRH, derivado do levantamento topográfico da albufeira), a área do satélite é
             cerca de <b>92%</b> da área implícita no volume oficial, de forma constante em todas as cotas:
             um enviesamento sistemático, provavelmente pixéis mistos da margem classificados como terra.
-            O satélite mede <b>variações</b> de volume, não o volume total: a série reconstruída parte de
-            um volume de referência.</p>
-            <p class="note"><b>Âmbito:</b> este teste usa o Alqueva inteiro, não só a freguesia de Monsaraz.</p>
+            Como o satélite só mede <b>variações</b> de volume, a série reconstruída parte de um volume
+            de referência.</p>
+            <p class="note" data-en="&lt;b&gt;Scope:&lt;/b&gt; this test uses the whole Alqueva, not just the parish of Monsaraz."><b>Âmbito:</b> este teste usa o Alqueva inteiro, não só a freguesia de Monsaraz.</p>
           </div>
         </div>
 
         <div class="block" id="fase3">
-          <h2>Dez albufeiras do Guadiana: volume a partir de uma só imagem
-            <button class="infobtn" id="infoF3" aria-expanded="false" aria-controls="f3Expl" title="Como foi calculado?">i</button>
+          <h2><span data-en="Ten Guadiana reservoirs: volume from a single image">Dez albufeiras do Guadiana: volume a partir de uma só imagem</span>
+            <button class="infobtn" id="infoF3" aria-expanded="false" aria-controls="f3Expl" title="Como foi calculado?" data-en-title="How was it calculated?">i</button>
           </h2>
           <div class="valrow">
-            <div class="card"><div class="val" id="f3a">—</div><div class="lab" id="f3alab">albufeiras com erro de volume abaixo de 8%</div></div>
-            <div class="card"><div class="val" id="f3b">—</div><div class="lab">erro no Alqueva</div></div>
-            <div class="card"><div class="val" id="f3c">—</div><div class="lab">imagens analisadas</div></div>
+            <div class="card"><div class="val" id="f3a">—</div><div class="lab" id="f3alab" data-en="reservoirs with volume error below 8%">albufeiras com erro de volume abaixo de 8%</div></div>
+            <div class="card"><div class="val" id="f3b">—</div><div class="lab" data-en="error in the Alqueva">erro no Alqueva</div></div>
+            <div class="card"><div class="val" id="f3c">—</div><div class="lab" data-en="images analysed">imagens analisadas</div></div>
           </div>
           <div class="tf3wrap"><table class="tf3" id="tabF3">
-            <thead><tr><th>Albufeira</th><th>Erro do volume</th><th>Método antigo</th><th>Satélite / oficial</th><th>r</th><th>Área (ha)</th><th>Nota</th></tr></thead>
+            <thead><tr><th data-en="Reservoir">Albufeira</th><th data-en="Volume error">Erro do volume</th><th data-en="Old method">Método antigo</th><th data-en="Satellite / official">Satélite / oficial</th><th>r</th><th data-en="Area (ha)">Área (ha)</th><th data-en="Note">Nota</th></tr></thead>
             <tbody></tbody></table></div>
-          <p class="note" style="margin-top:8px">Erro do volume estimado a partir de <b>uma só imagem</b> (área → cota →
+          <p class="note" style="margin-top:8px" data-en="Volume error estimated from &lt;b&gt;a single image&lt;/b&gt; (area → water level → volume), tested leaving one year out at a time, as a % of the mean volume. The official level is not used to select images: only the automatic water-core filter.">Erro do volume estimado a partir de <b>uma só imagem</b> (área → cota →
           volume), testado deixando um ano de fora de cada vez, em % do volume médio. Sem usar a cota oficial na
           seleção das imagens: só o filtro automático do núcleo de água.</p>
           <div id="f3Expl" hidden style="margin-top:9px">
-            <p class="note"><b>Método final:</b> água = NDWI (bandas B3 e B8, nativas de 10 m) &gt; −0,1, dentro do
+            <p class="note" data-en="&lt;b&gt;Final method:&lt;/b&gt; water = NDWI (bands B3 and B8, native 10 m) &amp;gt; −0.1, inside the outline of each reservoir (JRC historical maximum + 30 m). The threshold was calibrated on the Alqueva and the Caia only; for the other eight it is a test, not a fit. The original method (MNDWI at 20 m) missed the shoreline band and measured 54–92% of the area implied by the official volume."><b>Método final:</b> água = NDWI (bandas B3 e B8, nativas de 10 m) &gt; −0,1, dentro do
             contorno de cada albufeira (máximo histórico do JRC + 30 m). O limiar foi calibrado só no Alqueva e no
             Caia; nas outras oito é um teste, não um ajuste. O método original (MNDWI a 20 m) perdia a faixa da
             margem: media 54–92% da área implícita no volume oficial.</p>
-            <p class="note"><b>Filtro automático:</b> o centro de cada albufeira, definido pelo Sentinel-2 no período
+            <p class="note" data-en="&lt;b&gt;Automatic filter:&lt;/b&gt; the core of each reservoir, defined from Sentinel-2 in the lowest-water period of 2017–2025, must show up as water in ≥ 98%. If it does not, the image has haze, thin cloud or glint and is rejected. A first version, using JRC&#x27;s permanent-water core, rejected real droughts; this one no longer mistakes them for bad images."><b>Filtro automático:</b> o centro de cada albufeira, definido pelo Sentinel-2 no período
             de nível mais baixo de 2017–2025, tem de aparecer como água em ≥ 98%. Se não aparece, a imagem tem
-            neblina, nuvem fina ou reflexo e é rejeitada. Não confunde secas com imagens más.</p>
-            <p class="note"><b>Cota oficial validada:</b> os sensores de cota têm falhas (derivas de semanas, saltos
+            neblina, nuvem fina ou reflexo e é rejeitada. Uma primeira versão, com o núcleo de água
+            permanente do JRC, rejeitava secas reais; esta já não as confunde com imagens más.</p>
+            <p class="note" data-en="&lt;b&gt;Official level checked:&lt;/b&gt; level gauges have faults (drifts lasting weeks, jumps of several metres). Only dates where the level agrees with the official volume or with neighbouring days are used."><b>Cota oficial validada:</b> os sensores de cota têm falhas (derivas de semanas, saltos
             de vários metros). Só entram datas em que a cota é coerente com o volume oficial ou com os dias vizinhos.</p>
-            <p class="note"><b>Limites:</b> no Enxoé a área do satélite fica a 67% da oficial em todas as cotas, sem
+            <p class="note" data-en="&lt;b&gt;Limits:&lt;/b&gt; in the Enxoé the satellite area stays at 67% of the official one at every level, with no clear explanation (outdated official curve or aquatic vegetation). In the Lucefécit and the Vigia the core is tiny or missing and the official level is noisy, so the error does not measure the method alone. And, as in the Alqueva, the satellite measures volume changes: absolute volume needs a reference value."><b>Limites:</b> no Enxoé a área do satélite fica a 67% da oficial em todas as cotas, sem
             explicação clara (curva oficial desatualizada ou vegetação aquática). No Lucefécit e na Vigia o núcleo
-            é minúsculo ou inexistente e a cota oficial é ruidosa: o erro não mede só o método. O satélite mede
-            variações de volume; o volume absoluto parte de um valor de referência.</p>
+            é minúsculo ou inexistente e a cota oficial é ruidosa: o erro não mede só o método. E, tal como
+            no Alqueva, o satélite mede variações de volume: o volume absoluto precisa de um valor de referência.</p>
           </div>
         </div>
 
         <div class="block">
-          <h2>Consistência com o JRC Global Surface Water
-            <button class="infobtn" id="infoVal" aria-expanded="false" aria-controls="valExpl" title="Como foi calculado?">i</button>
+          <h2><span data-en="Consistency with JRC Global Surface Water">Consistência com o JRC Global Surface Water</span>
+            <button class="infobtn" id="infoVal" aria-expanded="false" aria-controls="valExpl" title="Como foi calculado?" data-en-title="How was it calculated?">i</button>
           </h2>
           <div class="valrow">
-            <div class="card"><div class="val">92,7%</div><div class="lab">concordância espacial (IoU) — só julho 2020</div></div>
-            <div class="card"><div class="val">r = 0,80</div><div class="lab">correlação temporal — 41 meses (2017–2021)</div></div>
+            <div class="card"><div class="val" data-en="92.7%">92,7%</div><div class="lab" data-en="spatial agreement (IoU), July 2020 only">concordância espacial (IoU), só julho de 2020</div></div>
+            <div class="card"><div class="val" data-en="r = 0.80">r = 0,80</div><div class="lab" data-en="temporal correlation over 41 months (2017–2021)">correlação temporal em 41 meses (2017–2021)</div></div>
           </div>
           <div id="valExpl" hidden style="margin-top:9px">
-            <p class="note"><b>IoU (julho 2020):</b> sobreposição entre a água deste método e a do
+            <p class="note" data-en="&lt;b&gt;IoU (July 2020):&lt;/b&gt; overlap between this method&#x27;s water and JRC&#x27;s, inside the parish, only over pixels JRC observed, at JRC resolution (30 m). It applies to that date only."><b>IoU (julho 2020):</b> sobreposição entre a água deste método e a do
             JRC, dentro da freguesia, apenas sobre os pixéis que o JRC observou, à resolução do JRC
             (30 m). Aplica-se só a essa data.</p>
-            <p class="note"><b>Correlação r (2017–2021):</b> 41 meses em que o JRC observou &gt;80%
+            <p class="note" data-en="&lt;b&gt;Correlation r (2017–2021):&lt;/b&gt; 41 months in which JRC observed &amp;gt;80% of the parish; each month, the water area of both methods is compared over the same observed pixels, at 30 m. It measures agreement in the &lt;i&gt;dynamics&lt;/i&gt;, not on single dates."><b>Correlação r (2017–2021):</b> 41 meses em que o JRC observou &gt;80%
             da freguesia; em cada mês compara-se a área de água dos dois métodos sobre os mesmos
             pixéis observados, a 30 m. Mede a concordância da <i>dinâmica</i>, não de datas isoladas.</p>
-            <p class="note"><b>Grelhas / sem dados:</b> tudo reduzido a 30 m; meses e pixéis sem
+            <p class="note" data-en="&lt;b&gt;Grids / no data:&lt;/b&gt; everything resampled to 30 m; months and pixels without a JRC observation are excluded, never counted as zero."><b>Grelhas / sem dados:</b> tudo reduzido a 30 m; meses e pixéis sem
             observação do JRC são excluídos, nunca contados como zero.</p>
-            <p class="note"><b>O que isto prova (e não prova):</b> o JRC também deriva de imagens
+            <p class="note" data-en="&lt;b&gt;What this proves (and doesn&#x27;t):&lt;/b&gt; JRC is also derived from optical imagery (Landsat). Agreement shows &lt;b&gt;cross-sensor consistency&lt;/b&gt;, not independent validation: two optical methods can fail in the same way. The independent test, against the official water level, is in the previous block."><b>O que isto prova (e não prova):</b> o JRC também deriva de imagens
             óticas (Landsat). A concordância mostra <b>consistência entre sensores</b>, não validação
             independente: dois métodos óticos podem errar da mesma forma. O teste independente, com a
             cota oficial, está no bloco anterior.</p>
@@ -459,44 +467,44 @@
         </div>
 
         <details class="meth block">
-          <summary>Dados e metodologia</summary>
+          <summary data-en="Data and methodology">Dados e metodologia</summary>
           <div class="body">
             <dl class="meta">
-              <dt>Imagens</dt><dd>Copernicus Sentinel-2, produto L2A (reflectância de superfície), coleção <i>S2_SR_HARMONIZED</i>, via Google Earth Engine.</dd>
-              <dt>Composição temporal</dt><dd>Mediana por trimestre (3 meses); cada ano representado pelo 3.º trimestre (julho–setembro).</dd>
-              <dt>Nuvens e sombras</dt><dd>Máscara pela banda SCL (removidas: sem dados, saturado, sombra de nuvem, nuvem média/alta, cirrus).</dd>
-              <dt>Identificação da água</dt><dd>Índice MNDWI = (B3 − B11) / (B3 + B11).</dd>
-              <dt>Limiar</dt><dd>Água: MNDWI &gt; 0.</dd>
-              <dt>Pós-processamento</dt><dd>Vetorização da máscara e simplificação (tolerância 10 m).</dd>
-              <dt>Referência e áreas</dt><dd>Cálculo em ETRS89/PT-TM06 (EPSG:3763); dados servidos em WGS84.</dd>
-              <dt>Limite administrativo</dt><dd>CAOP — Direção-Geral do Território. Versão exata: <i>por confirmar</i>.</dd>
-              <dt>Validação independente</dt><dd>Área do Alqueva inteiro em imagens de datas únicas
+              <dt data-en="Imagery">Imagens</dt><dd data-en="Copernicus Sentinel-2, L2A product (surface reflectance), &lt;i&gt;S2_SR_HARMONIZED&lt;/i&gt; collection, via Google Earth Engine.">Copernicus Sentinel-2, produto L2A (reflectância de superfície), coleção <i>S2_SR_HARMONIZED</i>, via Google Earth Engine.</dd>
+              <dt data-en="Temporal compositing">Composição temporal</dt><dd data-en="Median per quarter (3 months); each year is represented by Q3 (July–September).">Mediana por trimestre (3 meses); cada ano representado pelo 3.º trimestre (julho–setembro).</dd>
+              <dt data-en="Clouds and shadows">Nuvens e sombras</dt><dd data-en="SCL band mask (removed: no data, saturated, cloud shadow, medium/high cloud, cirrus).">Máscara pela banda SCL (removidas: sem dados, saturado, sombra de nuvem, nuvem média/alta, cirrus).</dd>
+              <dt data-en="Water detection">Identificação da água</dt><dd data-en="MNDWI index = (B3 − B11) / (B3 + B11).">Índice MNDWI = (B3 − B11) / (B3 + B11).</dd>
+              <dt data-en="Threshold">Limiar</dt><dd data-en="Water: MNDWI &amp;gt; 0.">Água: MNDWI &gt; 0.</dd>
+              <dt data-en="Post-processing">Pós-processamento</dt><dd data-en="Mask vectorisation and simplification (10 m tolerance).">Vetorização da máscara e simplificação (tolerância 10 m).</dd>
+              <dt data-en="Reference system and areas">Referência e áreas</dt><dd data-en="Computed in ETRS89/PT-TM06 (EPSG:3763); data served in WGS84.">Cálculo em ETRS89/PT-TM06 (EPSG:3763); dados servidos em WGS84.</dd>
+              <dt data-en="Administrative boundary">Limite administrativo</dt><dd data-en="CAOP, from Direção-Geral do Território. Exact edition: &lt;i&gt;to be confirmed&lt;/i&gt;.">CAOP, da Direção-Geral do Território. Versão exata: <i>por confirmar</i>.</dd>
+              <dt data-en="Independent validation">Validação independente</dt><dd data-en="Whole-Alqueva area on single-date images (2017–2025) vs. official SNIRH water level (station 24M/07A); second-degree curve with robust rejection of anomalous dates (3.5 × MAD). Volume: ΔV = ∫A dh, compared with the official volume (2 anomalous official records excluded by the same criterion).">Área do Alqueva inteiro em imagens de datas únicas
               (2017–2025) vs. cota oficial do SNIRH (estação 24M/07A); curva de 2.º grau com rejeição
               robusta de datas anómalas (3,5 × MAD). Volume: ΔV = ∫A dh, comparado com o volume oficial
               (2 registos oficiais anómalos excluídos pelo mesmo critério).</dd>
-              <dt>Consistência (JRC)</dt><dd>JRC Global Surface Water (Pekel et al., 2016): IoU 92,7% (julho 2020); r = 0,80 (41 meses com &gt;80% de cobertura JRC, 2017–2021).</dd>
-              <dt>Incerteza</dt><dd>Dois termos, nenhum deles intervalo de confiança estatístico.
+              <dt data-en="Consistency (JRC)">Consistência (JRC)</dt><dd data-en="JRC Global Surface Water (Pekel et al., 2016): IoU 92.7% (July 2020); r = 0.80 (41 months with &amp;gt;80% JRC coverage, 2017–2021).">JRC Global Surface Water (Pekel et al., 2016): IoU 92,7% (julho 2020); r = 0,80 (41 meses com &gt;80% de cobertura JRC, 2017–2021).</dd>
+              <dt data-en="Uncertainty">Incerteza</dt><dd data-en="Two terms, neither a statistical confidence interval. (1) Sensitivity to the MNDWI threshold (±0.05): ≈ ±15 ha (~1.3% of the area). (2) Shoreline mixed pixels: 46–54 km of shoreline inside the parish, on B11&#x27;s 20 m grid; worst case (systematic half pixel) ≈ ±46–54 ha (~4%); with random errors &amp;lt;1 ha. A systematic bias affects both dates in the same direction and largely cancels out in the difference.">Dois termos, nenhum deles intervalo de confiança estatístico.
               (1) Sensibilidade ao limiar MNDWI (±0,05): ≈ ±15 ha (~1,3% da área).
               (2) Pixéis mistos na margem: 46–54 km de margem dentro da freguesia, na grelha de 20 m
               da B11; pior caso (meio pixel sistemático) ≈ ±46–54 ha (~4%); com erros aleatórios
               &lt;1 ha. Um enviesamento sistemático afeta as duas datas no mesmo sentido e anula-se em
               grande parte na diferença.</dd>
-              <dt>Água fora da albufeira</dt><dd>Charcas e pequenas barragens, identificadas com uma
+              <dt data-en="Water outside the reservoir">Água fora da albufeira</dt><dd data-en="Farm ponds and small dams, identified with an Alqueva envelope derived from the JRC maximum extent: 0.2–1.0 ha in Q3 (&amp;lt;0.1%). Negligible effect; not removed.">Charcas e pequenas barragens, identificadas com uma
               envolvente do Alqueva derivada da extensão máxima do JRC: 0,2–1,0 ha no T3 (&lt;0,1%).
               Efeito desprezável; não removidas.</dd>
-              <dt>Data de processamento</dt><dd>Outubro–novembro de 2026 (Fase 3: novembro de 2026).</dd>
+              <dt data-en="Processing date">Data de processamento</dt><dd data-en="October–November 2026 (Phase 3: November 2026).">Outubro–novembro de 2026 (Fase 3: novembro de 2026).</dd>
             </dl>
-            <p class="note" style="margin-top:12px"><b>Nota:</b> a comparação descreve diferenças
-            na superfície de água detetada. Não determina, por si só, as causas dessas diferenças.</p>
+            <p class="note" style="margin-top:12px" data-en="The comparison shows where and how much the detected water changed, but not why. The area depends on rainfall as much as on how the reservoir is managed.">A comparação mostra onde e quanto mudou a água
+            detetada, mas não explica porquê. A área depende tanto da chuva como da gestão da albufeira.</p>
           </div>
         </details>
 
         <div class="block">
-          <h2>Fontes</h2>
-          <p class="src">Imagens: contém dados <b>Copernicus Sentinel</b> modificados (2017–2025), processados via Google Earth Engine.<br>
-          Cota e volume do Alqueva: <b>SNIRH</b> — Agência Portuguesa do Ambiente, I.P.<br>
-          Comparação: <b>JRC Global Surface Water</b> (Pekel et al., 2016).<br>
-          Limite administrativo: <b>CAOP</b> — Direção-Geral do Território.<br>
+          <h2 data-en="Sources">Fontes</h2>
+          <p class="src" data-en="Imagery: contains modified Copernicus Sentinel data (2017–2025), processed via Google Earth Engine.&lt;br&gt;Alqueva water level and volume: SNIRH, Agência Portuguesa do Ambiente, I.P.&lt;br&gt;Comparison: JRC Global Surface Water (Pekel et al., 2016).&lt;br&gt;Administrative boundary: CAOP, Direção-Geral do Território.&lt;br&gt;Basemap: Esri, Maxar, Earthstar Geographics.">Imagens: contém dados Copernicus Sentinel modificados (2017–2025), processados via Google Earth Engine.<br>
+          Cota e volume do Alqueva: SNIRH, Agência Portuguesa do Ambiente, I.P.<br>
+          Comparação: JRC Global Surface Water (Pekel et al., 2016).<br>
+          Limite administrativo: CAOP, Direção-Geral do Território.<br>
           Base cartográfica: Esri, Maxar, Earthstar Geographics.</p>
         </div>
       </aside>
@@ -536,12 +544,36 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
             <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
           </svg>
-          Ver Perfil no LinkedIn
+          <span data-en="View LinkedIn profile">Ver perfil no LinkedIn</span>
         </a>
 
-        <p class="note">Second Lieutenant at the Portuguese Army Geospatial Centre (CIGeoE), where I have worked since 2023 on geospatial data production for the Multinational Geospatial Co-Production Program (MGCP), an international effort to produce standardised geospatial data.</p>
-        <p class="note">My work covers the full production chain: acquiring and editing vector data, validating it against international standards, and automating repetitive processes with Python. More recently, I have been applying Deep Learning to cartographic production, exploring how semantic segmentation can speed up feature extraction from satellite imagery.</p>
-        <p class="note">My background in Spatial Planning gives me a view of geographic data beyond the map itself: how it supports decisions about territory, infrastructure and resources.</p>
+        <div class="bio" lang="pt" data-bio="pt">
+        <p class="note">Alferes no Centro de Informação Geoespacial do Exército (CIGeoE), onde trabalho desde 2023 na produção de dados geoespaciais para o Multinational Geospatial Co-Production Program (MGCP), um programa internacional que produz dados geoespaciais normalizados.</p>
+        <p class="note">No dia a dia, isso quer dizer a cadeia de produção inteira: adquirir e editar dados vetoriais, validá-los segundo normas internacionais e escrever Python que nos tire das mãos as partes repetitivas. Ultimamente tenho aplicado deep learning à produção cartográfica, a testar se a segmentação semântica consegue acelerar a extração de elementos a partir de imagens de satélite.</p>
+        <p class="note">Formei-me em Ordenamento do Território, por isso tenho tendência a perguntar para que serve um mapa: que decisões sobre o território, as infraestruturas e os recursos vai acabar por apoiar.</p>
+        
+        <dl class="meta" style="margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line);">
+          <dt style="margin-top:0;">Competências</dt>
+          <dd>
+            <ul style="margin: 8px 0 15px; padding-left: 20px; font-size: 0.78rem; color: var(--muted); line-height: 1.6;">
+              <li>Produção e controlo de qualidade de dados geoespaciais</li>
+              <li>Automação SIG com Python, ArcGIS Pro e arcpy</li>
+              <li>Análise espacial e modelação multicritério</li>
+              <li>Deep learning para deteção remota</li>
+              <li>SQL e bases de dados espaciais</li>
+            </ul>
+          </dd>
+          <dt>Formação</dt>
+          <dd style="margin-top: 5px; color: var(--ink);">
+            Licenciatura em Ordenamento do Território, Universidade de Lisboa <br> 
+            <span style="color:var(--muted);">Mestrando em Sistemas de Informação Geográfica e Modelação Territorial, Universidade de Lisboa</span>
+          </dd>
+        </dl>
+        </div>
+        <div class="bio" lang="en" data-bio="en" hidden>
+        <p class="note">Second Lieutenant at the Portuguese Army Geospatial Centre (CIGeoE), where since 2023 I have worked on geospatial data production for the Multinational Geospatial Co-Production Program (MGCP), an international programme that produces standardised geospatial data.</p>
+        <p class="note">Day to day that means the whole production chain: acquiring and editing vector data, validating it against international standards, and writing Python to take the repetitive parts off our hands. Lately I have been applying deep learning to cartographic production, testing whether semantic segmentation can speed up feature extraction from satellite imagery.</p>
+        <p class="note">I trained in Spatial Planning, so I tend to ask what a map is for: which decisions about land, infrastructure and resources it will end up supporting.</p>
         
         <dl class="meta" style="margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line);">
           <dt style="margin-top:0;">Core skills</dt>
@@ -560,12 +592,55 @@
             <span style="color:var(--muted);">MSc candidate in GIS & Territorial Modelling, Universidade de Lisboa</span>
           </dd>
         </dl>
+        </div>
       </div>
     </div>
   </div>
 
 </main>
 
+<script>
+/* =======================================================================
+   IDIOMA (PT / EN)
+   Os elementos com data-en guardam a versão inglesa; a portuguesa fica
+   guardada em data-pt na primeira troca. A escolha fica no endereço (?lang=en)
+   e no browser, e é partilhada com a página da rotura (mesmo domínio).
+======================================================================= */
+var LANG = (function(){
+  const q = new URLSearchParams(location.search).get('lang');
+  if (q === 'en' || q === 'pt') return q;
+  try { const s = localStorage.getItem('lang'); if (s === 'en' || s === 'pt') return s; } catch(e) {}
+  return 'pt';
+})();
+function T(pt, en){ return LANG === 'en' ? en : pt; }
+const TITULO = {pt:'Gustavo Santa · Portfólio Geoespacial', en:'Gustavo Santa · Geospatial Portfolio'};
+function aplicarIdioma(){
+  document.documentElement.lang = LANG === 'en' ? 'en' : 'pt-PT';
+  document.title = TITULO[LANG];
+  document.querySelectorAll('[data-en]').forEach(el=>{
+    if (el.dataset.pt === undefined) el.dataset.pt = el.innerHTML;
+    el.innerHTML = LANG === 'en' ? el.dataset.en : el.dataset.pt;
+  });
+  document.querySelectorAll('[data-en-title]').forEach(el=>{
+    if (el.dataset.ptTitle === undefined) el.dataset.ptTitle = el.title;
+    el.title = LANG === 'en' ? el.dataset.enTitle : el.dataset.ptTitle;
+  });
+  document.querySelectorAll('.bio').forEach(d=>{ d.hidden = d.dataset.bio !== LANG; });
+  document.querySelectorAll('.lang-toggle button').forEach(b=>b.setAttribute('aria-pressed', String(b.dataset.lang === LANG)));
+}
+function mudarIdioma(l){
+  if (l === LANG) return;
+  LANG = l;
+  try { localStorage.setItem('lang', l); } catch(e) {}
+  const u = new URL(location.href);
+  if (l === 'en') u.searchParams.set('lang','en'); else u.searchParams.delete('lang');
+  history.replaceState(null, '', u);
+  aplicarIdioma();
+  if (typeof atualizarIdiomaMonsaraz === 'function') atualizarIdiomaMonsaraz();
+}
+document.querySelectorAll('.lang-toggle button').forEach(b=>b.addEventListener('click', ()=>mudarIdioma(b.dataset.lang)));
+aplicarIdioma();
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 /* =======================================================================
@@ -639,26 +714,29 @@ window.addEventListener('popstate', abrirDoEndereco);
 ======================================================================= */
 const ANOS=[2017,2018,2019,2020,2021,2022,2023,2024,2025];
 const TRIM=3;                                  // os dados do mapa são do 3.º trimestre
-const NOME_TRI={1:"1.º trimestre (janeiro–março)",2:"2.º trimestre (abril–junho)",
-                3:"3.º trimestre (julho–setembro)",4:"4.º trimestre (outubro–dezembro)"};
+const NOME_TRI={pt:{1:"1.º trimestre (janeiro–março)",2:"2.º trimestre (abril–junho)",
+                3:"3.º trimestre (julho–setembro)",4:"4.º trimestre (outubro–dezembro)"},
+                en:{1:"Q1 (January–March)",2:"Q2 (April–June)",3:"Q3 (July–September)",4:"Q4 (October–December)"}};
 const fileFor=a=>`agua_${a}_T3.geojson`;
 const store={}, incert={}, margem={};
 let serie=[], anosOk=[];
 const corA=getComputedStyle(document.documentElement).getPropertyValue('--a').trim();
 const corB=getComputedStyle(document.documentElement).getPropertyValue('--b').trim();
 
+const ATRIB={pt:'Base: Esri, Maxar · Água: Sentinel-2 (análise própria) · Limite: CAOP/DGT · Comparação: JRC GSW',
+  en:'Basemap: Esri, Maxar · Water: Sentinel-2 (own analysis) · Boundary: CAOP/DGT · Comparison: JRC GSW'};
 const map=L.map('map').setView([38.44,-7.38],12);
 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-  {maxZoom:18,attribution:'Base: Esri, Maxar · Água: Sentinel-2 (análise própria) · Limite: CAOP/DGT · Comparação: JRC GSW'}).addTo(map);
+  {maxZoom:18,attribution:ATRIB[LANG]}).addTo(map);
 L.control.scale({imperial:false}).addTo(map);
 let legDiv=null;
 const legenda=L.control({position:'bottomleft'});
 legenda.onAdd=function(){legDiv=L.DomUtil.create('div','legenda');return legDiv;};
 legenda.addTo(map);
 function updateLegenda(a,b){ if(!legDiv) return;
-  legDiv.innerHTML=`<i style="background:${corA}"></i>Água — ${a} · T3<br>`
-                  +`<i style="background:${corB}"></i>Água — ${b} · T3<br>`
-                  +`<i class="line"></i>Limite da freguesia`; }
+  legDiv.innerHTML=`<i style="background:${corA}"></i>${T('Água em','Water in')} ${a} (${T('T3','Q3')})<br>`
+                  +`<i style="background:${corB}"></i>${T('Água em','Water in')} ${b} (${T('T3','Q3')})<br>`
+                  +`<i class="line"></i>${T('Limite da freguesia','Parish boundary')}`; }
 window.addEventListener('resize',()=>{ map.invalidateSize(); try{ drawChart(+document.getElementById('selA').value,+document.getElementById('selB').value); drawCota(); }catch(e){} });
 
 // camadas persistentes + estado de visibilidade (trocar datas não repõe o que foi ocultado)
@@ -674,8 +752,9 @@ async function fetchFirst(urls){
 }
 function parseCSV(txt){const l=txt.trim().split(/\r?\n/);const c=l.shift().split(',');
   return l.map(r=>{const v=r.split(','),o={};c.forEach((k,i)=>o[k]=v[i]);return o;});}
-function fmt(x){return x.toLocaleString('pt-PT',{maximumFractionDigits:0});}
-function periodo(ano){return `${ano} · ${NOME_TRI[TRIM]}`;}
+const LOC=()=>LANG==='en'?'en-GB':'pt-PT';
+function fmt(x){return x.toLocaleString(LOC(),{maximumFractionDigits:0});}
+function periodo(ano){return `${ano} · ${NOME_TRI[LANG][TRIM]}`;}
 
 (async function(){
   try{
@@ -726,7 +805,7 @@ function periodo(ano){return `${ano} · ${NOME_TRI[TRIM]}`;}
       parseCSV(t).forEach(r=>margem[+r.ano]=+r.sistematico_ha); render();}).catch(()=>{});
   }catch(err){
     const st=document.getElementById('status');
-    if(st) st.textContent='Erro a carregar os dados. Confirma que os .geojson estão na pasta e que abriste via servidor local (http://localhost:8000).';
+    if(st) st.textContent=T('Erro a carregar os dados. Confirma que os .geojson estão na pasta e que abriste via servidor local (http://localhost:8000).','Could not load the data. Check that the .geojson files are in the folder and that the page is served locally (http://localhost:8000).');
     console.error(err);
   }
 })();
@@ -754,12 +833,12 @@ function drawChart(a,b){
     g+=`<line x1="${ml}" y1="${Y(v)}" x2="${W-mr}" y2="${Y(v)}" stroke="#2a3340" stroke-width="1.5" stroke-dasharray="4 4"/>`;
     g+=`<text x="${ml-10}" y="${Y(v)+4}" fill="#9fb0c0" font-size="11" text-anchor="end" font-weight="500">${v}</text>`;});
   // rótulo do eixo Y
-  g+=`<text transform="translate(14,${H/2}) rotate(-90)" fill="#9fb0c0" font-size="11" font-weight="600" text-anchor="middle">Superfície de água (ha)</text>`;
+  g+=`<text transform="translate(14,${H/2}) rotate(-90)" fill="#9fb0c0" font-size="11" font-weight="600" text-anchor="middle">${T('Superfície de água (ha)','Water surface (ha)')}</text>`;
   serie.forEach((d,i)=>{ if(d.tri===1)
     g+=`<text x="${X(i)}" y="${H-5}" fill="#9fb0c0" font-size="11" font-weight="500" text-anchor="middle">'${String(d.ano).slice(2)}</text>`;});
   g+=`<polyline points="${serie.map((d,i)=>X(i)+','+Y(d.area)).join(' ')}" fill="none" stroke="#5a7a95" stroke-width="2.5"/>`;
   serie.forEach((d,i)=>{ const u=(d.tri===3&&incert[d.ano]!=null)?` · ±${Math.round(incert[d.ano])} ha`:'';
-    g+=`<circle cx="${X(i)}" cy="${Y(d.area)}" r="3.5" fill="#8aa6bd" style="cursor:pointer"><title>${d.ano} · ${d.tri}.º trim · ${fmt(d.area)} ha${u}</title></circle>`;});
+    g+=`<circle cx="${X(i)}" cy="${Y(d.area)}" r="3.5" fill="#8aa6bd" style="cursor:pointer"><title>${d.ano} · ${T(d.tri+'.º trim','Q'+d.tri)} · ${fmt(d.area)} ha${u}</title></circle>`;});
   const ring=(ano,cor)=>{const i=serie.findIndex(d=>d.ano===ano&&d.tri===3);
     return i<0?'':`<circle cx="${X(i)}" cy="${Y(serie[i].area)}" r="7" fill="none" stroke="${cor}" stroke-width="3.5"/>`;};
   g+=ring(a,corA)+ring(b,corB);
@@ -768,12 +847,16 @@ function drawChart(a,b){
 
 
 // ---- validação independente (área vs. cota oficial) ----
-let validacao=null;
-function preencherFase3(d){
+let validacao=null, fase3=null;
+const NOTA_EN={'sem volume no SNIRH':'no volume in SNIRH',
+  'área do satélite a 67% da oficial em todas as cotas':'satellite area at 67% of the official one at every level',
+  'curva oficial de volume incoerente':'inconsistent official volume curve',
+  'núcleo muito pequeno (3 ha); cota oficial ruidosa':'very small core (3 ha); noisy official level'};
+function preencherFase3(d){ fase3=d;
   const A=d.albufeiras, pct=x=>x==null?'—':nPT(x,1)+'%';
   const comVol=A.filter(a=>a.erro_pct!=null);
   const bons=comVol.filter(a=>a.erro_pct<8);
-  document.getElementById('f3a').textContent=bons.length+' de '+comVol.length;
+  document.getElementById('f3a').textContent=bons.length+T(' de ',' of ')+comVol.length;
   const alq=A.find(a=>a.id==='alqueva'); if(alq) document.getElementById('f3b').textContent=pct(alq.erro_pct);
   document.getElementById('f3c').textContent=nPT(A.reduce((s,a)=>s+a.datas,0),0);
   const ord=[...A].sort((p,q)=>(p.erro_pct??99)-(q.erro_pct??99));
@@ -782,21 +865,25 @@ function preencherFase3(d){
     const raz=a.nota.startsWith('curva oficial')||a.razao==null?'—':nPT(a.razao,2);
     return '<tr'+(fraca?' class="fraca"':'')+'><td>'+a.nome+'</td><td><b>'+pct(a.erro_pct)+'</b></td><td>'+pct(a.erro_antigo_pct)+
       '</td><td>'+raz+'</td><td>'+(a.r==null?'—':nPT(a.r,2))+'</td><td>'+nPT(a.area_ha,0)+
-      '</td><td class="nt">'+(a.nota||'')+'</td></tr>';}).join('');
+      '</td><td class="nt">'+(LANG==='en'?(NOTA_EN[a.nota]??a.nota):a.nota||'')+'</td></tr>';}).join('');
 }
-function nPT(x,d){return Number(x).toLocaleString('pt-PT',{minimumFractionDigits:d,maximumFractionDigits:d});}
+function nPT(x,d){return Number(x).toLocaleString(LOC(),{minimumFractionDigits:d,maximumFractionDigits:d});}
 function preencherValidacao(){
   if(!validacao) return;
   const f1=validacao.res.fase1_area_cota, f2=validacao.res.fase2_volume;
   document.getElementById('vR').textContent='r = '+nPT(f1.r_sem_anomalas,2);
-  document.getElementById('vRlab').textContent=`área vs. cota — ${f1.datas_na_curva} de ${f1.datas_utilizaveis} datas`;
+  document.getElementById('vRlab').textContent=T(`área vs. cota (${f1.datas_na_curva} de ${f1.datas_utilizaveis} datas)`,`area vs. water level (${f1.datas_na_curva} of ${f1.datas_utilizaveis} dates)`);
   document.getElementById('vDisp').textContent=`±${nPT(f1.dispersao_ha,0)} ha (${nPT(f1.dispersao_pct,1)}%)`;
   document.getElementById('vVol').textContent=nPT(f2.serie_rmse_pct,1)+'%';
-  document.getElementById('vVollab').textContent=`erro na série de volume (${nPT(f2.serie_rmse_hm3,0)} hm³)`;
-  document.getElementById('vNota').textContent=
+  document.getElementById('vVollab').textContent=T(`erro na série de volume (${nPT(f2.serie_rmse_hm3,0)} hm³)`,`volume series error (${nPT(f2.serie_rmse_hm3,0)} hm³)`);
+  const pctA=nPT(100*f1.datas_anomalas/f1.datas_utilizaveis,0);
+  document.getElementById('vNota').textContent=T(
     `${f1.datas_na_curva} de ${f1.datas_utilizaveis} datas seguem a curva; ${f1.datas_anomalas} `+
-    `(${nPT(100*f1.datas_anomalas/f1.datas_utilizaveis,0)}%) são assinaladas como anómalas (círculos vazios). `+
-    `Com todas as datas, r = ${nPT(f1.r_todas,2)}. Passa o rato sobre um ponto para ver a data.`;
+    `(${pctA}%) são assinaladas como anómalas (círculos vazios). `+
+    `Com todas as datas, r = ${nPT(f1.r_todas,2)}. Passa o rato sobre um ponto para ver a data.`,
+    `${f1.datas_na_curva} of ${f1.datas_utilizaveis} dates follow the curve; ${f1.datas_anomalas} `+
+    `(${pctA}%) are flagged as anomalous (open circles). `+
+    `With all dates, r = ${nPT(f1.r_todas,2)}. Hover over a point to see the date.`);
   drawCota();
 }
 function drawCota(){
@@ -813,15 +900,15 @@ function drawCota(){
     g+=`<line x1="${ml}" y1="${Y(a)}" x2="${W-mr}" y2="${Y(a)}" stroke="#2a3340" stroke-dasharray="4 4"/>`;
     g+=`<text x="${ml-8}" y="${Y(a)+4}" fill="#9fb0c0" font-size="11" text-anchor="end">${nPT(a,0)}</text>`;}
   for(let h=hmin;h<=hmax;h++) g+=`<text x="${X(h)}" y="${H-mb+16}" fill="#9fb0c0" font-size="11" text-anchor="middle">${h}</text>`;
-  g+=`<text x="${(ml+W-mr)/2}" y="${H-4}" fill="#9fb0c0" font-size="11" font-weight="600" text-anchor="middle">Cota oficial da albufeira (m)</text>`;
-  g+=`<text transform="translate(14,${(mt+H-mb)/2}) rotate(-90)" fill="#9fb0c0" font-size="11" font-weight="600" text-anchor="middle">Área de água do Alqueva (ha)</text>`;
+  g+=`<text x="${(ml+W-mr)/2}" y="${H-4}" fill="#9fb0c0" font-size="11" font-weight="600" text-anchor="middle">${T('Cota oficial da albufeira (m)','Official reservoir water level (m)')}</text>`;
+  g+=`<text transform="translate(14,${(mt+H-mb)/2}) rotate(-90)" fill="#9fb0c0" font-size="11" font-weight="600" text-anchor="middle">${T('Área de água do Alqueva (ha)','Alqueva water area (ha)')}</text>`;
   let c=''; for(let i=0;i<=60;i++){const h=hmin+(hmax-hmin)*i/60; c+=(i?' ':'')+X(h)+','+Y(A(h));}
   g+=`<polyline points="${c}" fill="none" stroke="#e7edf3" stroke-width="2" opacity=".8"/>`;
-  pts.forEach(p=>{ const fora=p.a<amin?' (abaixo da escala)':'';
+  pts.forEach(p=>{ const fora=p.a<amin?T(' (abaixo da escala)',' (below the scale)'):'';
     g+= p.an
-      ? `<circle cx="${X(p.h)}" cy="${Y(p.a)}" r="4.5" fill="none" stroke="#ff8a8a" stroke-width="1.8"><title>${p.d} · ${nPT(p.a,0)} ha · cota ${nPT(p.h,2)} m · anómala${fora}</title></circle>`
-      : `<circle cx="${X(p.h)}" cy="${Y(p.a)}" r="3.5" fill="#28c7ff" opacity=".75"><title>${p.d} · ${nPT(p.a,0)} ha · cota ${nPT(p.h,2)} m</title></circle>`; });
-  el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Área de água do Alqueva em função da cota oficial">${g}</svg>`;
+      ? `<circle cx="${X(p.h)}" cy="${Y(p.a)}" r="4.5" fill="none" stroke="#ff8a8a" stroke-width="1.8"><title>${p.d} · ${nPT(p.a,0)} ha · ${T('cota','level')} ${nPT(p.h,2)} m · ${T('anómala','anomalous')}${fora}</title></circle>`
+      : `<circle cx="${X(p.h)}" cy="${Y(p.a)}" r="3.5" fill="#28c7ff" opacity=".75"><title>${p.d} · ${nPT(p.a,0)} ha · ${T('cota','level')} ${nPT(p.h,2)} m</title></circle>`; });
+  el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${T('Área de água do Alqueva em função da cota oficial','Alqueva water area against the official water level')}">${g}</svg>`;
 }
 
 function render(){
@@ -832,8 +919,8 @@ function render(){
   document.getElementById('areaA').textContent=fmt(aA)+' ha';
   document.getElementById('areaB').textContent=fmt(aB)+' ha';
   const uncTxt=ano=>{ const p=[];
-    if(incert[ano]!=null) p.push('limiar ±'+Math.round(incert[ano]));
-    if(margem[ano]!=null) p.push('margem até ±'+Math.round(margem[ano]));
+    if(incert[ano]!=null) p.push(T('limiar ±','threshold ±')+Math.round(incert[ano]));
+    if(margem[ano]!=null) p.push(T('margem até ±','shoreline up to ±')+Math.round(margem[ano]));
     return p.length?p.join(' · ')+' ha':''; };
   document.getElementById('uncA').textContent=uncTxt(a);
   document.getElementById('uncB').textContent=uncTxt(b);
@@ -842,24 +929,26 @@ function render(){
 
   const d=aB-aA;
   const big=document.getElementById('deltaV'), frase=document.getElementById('deltaFrase'), ctx=document.getElementById('deltaCtx');
-  ctx.textContent='Comparação do 3.º trimestre, dentro da freguesia de Monsaraz.';
+  ctx.textContent=T('Comparação do 3.º trimestre, dentro da freguesia de Monsaraz.','Q3 comparison, inside the parish of Monsaraz.');
   if(a===b || d===0){
-    big.textContent='Sem diferença';
-    frase.textContent='Sem diferença na superfície de água detetada entre os períodos selecionados.';
+    big.textContent=T('Sem diferença','No difference');
+    frase.textContent=T('Sem diferença na superfície de água detetada entre os períodos selecionados.','No difference in detected water surface between the selected periods.');
   }else{
     let ptxt;
-    if(aA===0 || aA==null){ ptxt=' · variação %: não aplicável'; }
-    else { ptxt=` (${d>=0?'+':'−'}${Math.abs(100*d/aA).toLocaleString('pt-PT',{maximumFractionDigits:1})}%)`; }
+    if(aA===0 || aA==null){ ptxt=T(' · variação %: não aplicável',' · % change: not applicable'); }
+    else { ptxt=` (${d>=0?'+':'−'}${Math.abs(100*d/aA).toLocaleString(LOC(),{maximumFractionDigits:1})}%)`; }
     big.textContent=`${d>=0?'+':'−'}${fmt(Math.abs(d))} ha${ptxt}`;
-    const verbo=d>=0?'Mais':'Menos';
-    frase.textContent=`${verbo} ${fmt(Math.abs(d))} ha de superfície de água detetada em ${b} face a ${a}.`;
+    frase.textContent=T(`${d>=0?'Mais':'Menos'} ${fmt(Math.abs(d))} ha de superfície de água detetada em ${b} face a ${a}.`,
+                        `${fmt(Math.abs(d))} ha ${d>=0?'more':'less'} detected water surface in ${b} than in ${a}.`);
   }
   const du=document.getElementById('deltaUnc');
   if(a!==b && margem[a]!=null && margem[b]!=null){
     const pior=margem[a]+margem[b];
     du.textContent = Math.abs(d)>pior
-      ? `A diferença é maior do que a incerteza de margem combinada no pior caso (±${fmt(pior)} ha).`
-      : `A diferença está dentro da incerteza de margem combinada no pior caso (±${fmt(pior)} ha): interpretar com cautela.`;
+      ? T(`A diferença é maior do que a incerteza de margem combinada no pior caso (±${fmt(pior)} ha).`,
+          `The difference is larger than the combined worst-case shoreline uncertainty (±${fmt(pior)} ha).`)
+      : T(`A diferença está dentro da incerteza de margem combinada no pior caso (±${fmt(pior)} ha): interpretar com cautela.`,
+          `The difference is within the combined worst-case shoreline uncertainty (±${fmt(pior)} ha): read with caution.`);
   } else { du.textContent=''; }
   updateLegenda(a,b);
   try{ drawChart(a,b); }catch(e){ console.warn('gráfico:',e); }
@@ -890,6 +979,14 @@ function render(){
 
 // [O CÓDIGO DO NOVO PROJETO ENTRA DAQUI PARA BAIXO]
 
+
+// Ao mudar de idioma, volta a escrever os textos gerados pelo código.
+function atualizarIdiomaMonsaraz(){
+  try { if (anosOk.length) render(); } catch(e) {}
+  try { if (validacao) preencherValidacao(); } catch(e) {}
+  try { if (fase3) preencherFase3(fase3); } catch(e) {}
+  map.attributionControl.removeAttribution(ATRIB.pt).removeAttribution(ATRIB.en).addAttribution(ATRIB[LANG]);
+}
 
 // Abrir a página do endereço só no fim, quando todo o código acima já existe.
 if (location.hash) abrirDoEndereco();

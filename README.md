@@ -1,186 +1,190 @@
-# Monsaraz em Mudança — Superfície de Água do Alqueva
+# Monsaraz em Mudança: Superfície de Água do Alqueva
 
-A reproducible geospatial pipeline and web application that tracks the change in the
-**Alqueva reservoir's water surface within the parish (*freguesia*) of Monsaraz**, Portugal,
-from Copernicus Sentinel-2 imagery (2017–2025).
+How much of the parish (*freguesia*) of Monsaraz, Portugal, is covered by the Alqueva reservoir, and
+how has that changed since 2017? This repository answers that from Copernicus Sentinel-2 imagery
+(2017–2025), with a reproducible pipeline and a small web app on top.
 
-**Live demo:** https://gustavosanta-star.github.io/monsaraz-agua-alqueva/
+Live demo: https://gustavosanta-star.github.io/monsaraz-agua-alqueva/
 
 ![The Monsaraz em Mudança web application](app.png)
 
----
-
 ## Overview
 
-The application lets anyone compare the **Q3 (July–September) water surface** of the parish between
-any two years: the delineated water extent on a satellite basemap, the area of each date, the
-absolute and relative difference, a quarterly time series, and a documented methodology.
+In the app you pick any two years and compare the parish's water surface in Q3 (July–September).
+You get the water extent drawn over a satellite basemap, the area on each date, the absolute and
+relative difference, a quarterly time series, and the methodology behind it.
 
-The engineering goal was a pipeline where **adding a new date is a single function call** — not a
-manual GIS session — with reproducible analysis, documented indicators and quality control.
+I built the pipeline so that adding a new date takes one function call instead of an afternoon in a
+GIS. The analysis is reproducible, and the indicators and quality checks are documented below.
 
-Between the lowest and highest Q3 values in the series, the parish's water surface grew by
-~276 ha (+27%); the change map below shows **where** it grew (green = water gained, 2020 → 2025):
+Between the lowest and highest Q3 values in the series, the parish's water surface grew by about
+276 ha (+27%). The change map shows where (green is water gained between 2020 and 2025):
 
 ![Water gained between 2020 and 2025 (green)](mudanca_2020_2025.png)
 
 ## Study area
 
-Freguesia de **Monsaraz** (municipality of Reguengos de Monsaraz, Évora district), on the right
-bank of the Guadiana / Alqueva reservoir. Official boundary from **CAOP (DGT)**. Area ≈ 8,829 ha.
-The large body of the Alqueva lies mostly outside the parish; the indicator measures only the water
-**inside the administrative boundary**.
+Freguesia de Monsaraz, in the municipality of Reguengos de Monsaraz (Évora district), on the right
+bank of the Guadiana and the Alqueva reservoir. The boundary is the official one from CAOP (DGT), and
+the parish covers about 8,829 ha. Most of the Alqueva lies outside it, so the indicator counts only
+the water inside the administrative boundary.
 
-## Data & method
+## Data and method
 
 | Step | Choice |
 |------|--------|
-| Imagery | Copernicus **Sentinel-2 L2A** (10 m), via Google Earth Engine |
-| Temporal composite | Per-quarter **median**, with cloud/shadow masking (Sentinel-2 **SCL** band) |
-| Water detection | **MNDWI** = (B3 − B11) / (B3 + B11), threshold **0** |
-| Post-processing | Vectorization + 10 m simplification |
-| Areas | Computed in **ETRS89/PT-TM06** (EPSG:3763); served in WGS84 |
+| Imagery | Copernicus Sentinel-2 L2A (10 m), via Google Earth Engine |
+| Temporal composite | Per-quarter median, with cloud and shadow masking (Sentinel-2 SCL band) |
+| Water detection | MNDWI = (B3 − B11) / (B3 + B11), threshold 0 |
+| Post-processing | Vectorization and 10 m simplification |
+| Areas | Computed in ETRS89/PT-TM06 (EPSG:3763); served in WGS84 |
 
-## Consistency check — JRC Global Surface Water
+## Consistency check against JRC Global Surface Water
 
-Comparison with **JRC Global Surface Water** (Pekel et al., 2016), the EU reference dataset for
-surface water. JRC GSW is itself derived from **optical imagery (Landsat)**, so agreement shows
-**cross-sensor consistency, not independent validation**: two optical methods can share the same
-errors. The independent test is the area–water level comparison below.
+The first comparison is with JRC Global Surface Water (Pekel et al., 2016), the EU reference dataset
+for surface water. JRC GSW also comes from optical imagery (Landsat), so two optical methods can
+share the same errors. Agreement here shows the results are consistent across sensors. It does not
+count as independent validation; that comes from the water-level test in the next section.
 
-- **Spatial agreement (IoU): 92.7%** — July 2020, compared only over JRC-observed pixels, at 30 m.
-- **Temporal correlation (Pearson r): 0.80** — 41 months (2017–2021) with >80% JRC coverage, areas
-  compared over the same observed pixels, at 30 m.
+- Spatial agreement (IoU): 92.7% for July 2020, compared only over pixels JRC observed, at 30 m.
+- Temporal correlation (Pearson r): 0.80 over 41 months (2017–2021) with more than 80% JRC coverage,
+  with areas compared over the same observed pixels, at 30 m.
 
-## Independent validation — official water level (SNIRH)
+## Independent validation with the official water level (SNIRH)
 
-A reservoir's flooded area is a rising function of its water level. The official level (*cota*)
-and stored volume of the Alqueva are measured at the dam and published by **SNIRH (APA, I.P.)** —
-a source that has nothing to do with satellite imagery. For this test the method was applied to the
-**whole Alqueva** (including the Spanish part, within the JRC-derived reservoir envelope, 24,596 ha),
-on **single-date** Sentinel-2 images, each paired with the official level of the same day (±3 days).
+The higher a reservoir's water level, the larger its flooded area. The official level (*cota*) and
+stored volume of the Alqueva are measured at the dam and published by SNIRH (APA, I.P.), so they owe
+nothing to satellite imagery. For this test I applied the method to the whole Alqueva, Spanish part
+included, inside the JRC-derived reservoir envelope (24,596 ha). Each single-date Sentinel-2 image
+was paired with the official level for the same day (±3 days).
 
 ![Alqueva water area vs. official water level](area_cota.png)
 
-**Area vs. level (Phase 1).** Of 851 image dates (2017–2025), **158** show the reservoir with
-< 50 ha of cloud gaps and have a level record.
+**Area vs. level (phase 1).** Of 851 image dates between 2017 and 2025, 158 show the reservoir with
+less than 50 ha of cloud gaps and have a level record.
 
-- **145 of the 158 dates follow the area–level curve: r = 0.97** (quadratic fit, R² = 0.94),
-  with a scatter of **±423 ha (2.5%)** for a single image.
-- The other **13 (8%)** are flagged as probable classification errors (haze, thin cloud, turbid
-  water) by robust rejection (residual > 3.5 × MAD); 12 of them fall *below* the curve. They are kept
-  and marked, not deleted. **With all 158 dates, r = 0.72.** Both numbers are reported.
+- 145 of those 158 dates follow the area–level curve closely: r = 0.97 (quadratic fit, R² = 0.94),
+  with a scatter of ±423 ha (2.5%) for a single image.
+- The remaining 13 (8%) are flagged by robust rejection (residual above 3.5 × MAD) as probable
+  classification errors from haze, thin cloud or turbid water. Twelve of them fall below the curve.
+  They stay in the data, marked. With all 158 dates, r drops to 0.72, and I report both numbers.
 
-**Volume (Phase 2).** In a reservoir, dV = A · dh, so the satellite area can be integrated over the
-level to estimate volume changes, and compared with the official volume–level relation (dV/dh):
+**Volume (phase 2).** In a reservoir, dV = A · dh. Integrating the satellite area over the level
+gives volume changes, which can be checked against the official volume–level relation (dV/dh):
 
-- The satellite area is **~92% of the area implied by the official volume data**, with a nearly
-  constant ratio (0.91–0.94) across 144–151 m: a systematic underestimate, most likely from
-  shoreline mixed pixels and flooded vegetation that MNDWI does not classify as water.
-- Volume change between 143.1 m and 152.0 m: **1,510 hm³ (satellite) vs 1,630 hm³ (official)**.
-- Volume series rebuilt from **one** reference volume (2023-07-10) plus the satellite curve,
-  against 450 official records: mean error −37 hm³, **RMSE 59 hm³ (1.8%)**.
-- Note: the commonly quoted **25,000 ha** at full supply level (152 m) is not consistent with the
-  official volume data themselves, whose dV/dh implies ~21,500 ha at 151 m — close to the
-  satellite curve (~20,200 ha at 151 m; ~21,200 ha at 152 m).
+- The satellite area is about 92% of the area implied by the official volume data, and the ratio
+  barely moves (0.91–0.94) between 144 and 151 m. That points to a systematic underestimate, most
+  likely from mixed pixels on the shoreline and flooded vegetation that MNDWI does not call water.
+- Volume change between 143.1 m and 152.0 m: 1,510 hm³ from the satellite, 1,630 hm³ official.
+- Rebuilding the volume series from a single reference volume (2023-07-10) plus the satellite curve
+  and comparing it with 450 official records gives a mean error of −37 hm³ and an RMSE of
+  59 hm³ (1.8%).
+- The 25,000 ha often quoted for full supply level (152 m) does not match the official volume data:
+  their dV/dh implies about 21,500 ha at 151 m. The satellite curve gives about 20,200 ha at 151 m
+  and 21,200 ha at 152 m, which is much closer.
 
-The satellite measures **volume changes, not absolute volume**: it cannot see the reservoir bed, so
-an absolute series needs one reference volume.
+A satellite cannot see the reservoir bed, so it measures changes in volume. An absolute series needs
+one reference volume.
 
-## Phase 3 — ten Guadiana reservoirs: volume from a single image
+## Phase 3: volume from a single image in ten Guadiana reservoirs
 
-The method was extended to the ten Portuguese reservoirs of the Guadiana basin with daily water level in SNIRH
-(`albufeiras.json`: adding a reservoir is one line). Each reservoir gets an envelope from the JRC maximum
-water extent (steps 13–15), and three things changed in the method after the multi-reservoir test:
+Next I extended the method to the ten Portuguese reservoirs in the Guadiana basin that have a daily
+water level in SNIRH. They are listed in `albufeiras.json`, and adding another takes one line. Each
+reservoir gets an envelope from the JRC maximum water extent (steps 13–15). Testing on several
+reservoirs led to three changes in the method:
 
-1. **Water index.** The original MNDWI at 20 m measured only 54–92% of the area implied by the official volume
-   curve: it misses the shoreline band (shallow, turbid or vegetated water). **NDWI (B3, B8; native 10 m) > −0.1**
-   brings it to 0.98–1.01 in the Alqueva and the Caia. The threshold was calibrated on those two only; the other
-   eight are a test, not a fit (steps 18–19).
-2. **Automatic image filter (no water level used).** The low-water core of each reservoir, from a Sentinel-2
-   median of its lowest 60-day window of 2017–2025, must be seen as water in ≥ 98%. A first version with a JRC
-   "permanent water" core wrongly rejected real droughts (Caia, autumn 2019); the Sentinel-2 core does not
-   (steps 17, 17b).
-3. **Official level validated.** Automatic level gauges have faults (multi-week drifts, jumps of several metres).
-   A date is used only if its level is consistent with the official volume or with neighbouring days (step 20).
+1. **Water index.** MNDWI at 20 m measured only 54–92% of the area implied by the official volume
+   curve, because it misses the band of shallow, turbid or vegetated water along the shore. NDWI
+   (B3, B8; native 10 m) above −0.1 brings the ratio to 0.98–1.01 in the Alqueva and the Caia. The
+   threshold was calibrated on those two reservoirs only, so the other eight work as a test rather
+   than a fit (steps 18–19).
+2. **Automatic image filter, without using the water level.** I take the low-water core of each
+   reservoir from a Sentinel-2 median of its lowest 60-day window in 2017–2025. An image passes if
+   at least 98% of that core is seen as water. My first version used a JRC "permanent water" core
+   and threw out real droughts (Caia, autumn 2019); the Sentinel-2 core does not (steps 17, 17b).
+3. **Checking the official level.** Automatic level gauges fail now and then, with drifts lasting
+   weeks and jumps of several metres. A date is used only if its level agrees with the official
+   volume or with the neighbouring days (step 20).
 
-**Result** — volume from one image (area → level → volume), leave-one-year-out, filter only:
+Volume from one image (area to level to volume), leave-one-year-out, using only the filter:
 
 | Reservoir | Area (ha) | Satellite / official area | r | Volume error (% of mean) | Old method |
 |---|---|---|---|---|---|
-| Alqueva | 24,603 | 1.01 | 0.99 | **2.2%** | 3.4% |
-| Abrilongo | 284 | 0.83 | 0.99 | **4.0%** | 14.3% |
-| Odeleite | 752 | 0.94 | 0.99 | **4.8%** | 16.0% |
-| Monte Novo | 322 | 0.90 | 0.98 | **5.4%** | 15.9% |
-| Beliche | 297 | 0.99 | 0.99 | **5.7%** | 20.4% |
-| Enxoé | 183 | 0.67 | 0.97 | **6.6%** | 12.8% |
-| Caia | 1,866 | 0.98 | 0.98 | **7.1%** | 8.3% |
+| Alqueva | 24,603 | 1.01 | 0.99 | 2.2% | 3.4% |
+| Abrilongo | 284 | 0.83 | 0.99 | 4.0% | 14.3% |
+| Odeleite | 752 | 0.94 | 0.99 | 4.8% | 16.0% |
+| Monte Novo | 322 | 0.90 | 0.98 | 5.4% | 15.9% |
+| Beliche | 297 | 0.99 | 0.99 | 5.7% | 20.4% |
+| Enxoé | 183 | 0.67 | 0.97 | 6.6% | 12.8% |
+| Caia | 1,866 | 0.98 | 0.98 | 7.1% | 8.3% |
 | Lucefécit | 177 | 0.83 | 0.95 | 18.6% | 20.0% |
-| Vigia | 310 | — (official curve inconsistent) | 0.97 | 28.0% | 54.3% |
-| Pedrógão | 1,211 | — (no volume in SNIRH) | 0.95 | — | — |
+| Vigia | 310 | n/a (official curve inconsistent) | 0.97 | 28.0% | 54.3% |
+| Pedrógão | 1,211 | n/a (no volume in SNIRH) | 0.95 | n/a | n/a |
 
-**Limits.** Enxoé stays at 67% of the official area at all levels (outdated official curve or aquatic
-vegetation — not resolved). Lucefécit and Vigia have a tiny or no core and a noisy official level, so their error
-does not measure the method alone. The NDWI threshold and the 98% filter threshold were chosen after seeing the
-Alqueva data. The satellite measures volume changes; absolute volume needs one reference value.
+**Limits.** Enxoé stays at 67% of the official area at every level. The cause could be an outdated
+official curve or aquatic vegetation; I have not resolved it. Lucefécit and Vigia have a tiny core
+or none, and a noisy official level, so their error says as much about the data as about the method.
+I chose the NDWI threshold and the 98% filter threshold after seeing the Alqueva data. As before, the
+satellite measures volume changes, and absolute volume needs one reference value.
 
 ## Uncertainty
 
-Two terms are reported. Neither is a statistical confidence interval.
+I report two terms. Neither is a statistical confidence interval.
 
-1. **Threshold sensitivity:** area change for a ±0.05 shift of the MNDWI threshold — mean
-   ≈ ±15 ha (~1.3%).
-2. **Shoreline (mixed-pixel) term:** MNDWI uses B11, native **20 m**. Shoreline length inside the
-   parish, counted on the 20 m grid, is **46–54 km**. Worst case — every edge pixel biased by half
-   a pixel in the same direction — gives **±46–54 ha (~4%)**; with independent errors it is
-   **<1 ha**. The threshold term falls between the two.
+1. **Threshold sensitivity.** Shifting the MNDWI threshold by ±0.05 changes the area by about
+   ±15 ha on average (~1.3%).
+2. **Shoreline mixed pixels.** MNDWI uses B11, which is native 20 m. Counted on the 20 m grid, the
+   shoreline inside the parish is 46–54 km long. If every edge pixel were off by half a pixel in the
+   same direction, the area would be off by ±46–54 ha (~4%). With independent errors the effect is
+   under 1 ha. The threshold term sits between the two.
 
-A systematic edge bias affects both dates in the same direction and largely cancels in a
-difference. Even under the most conservative assumption (opposite biases, added linearly), the
-2020 → 2025 change (+276 ha) exceeds the combined ±100 ha; small differences such as
-2022 → 2023 (+35 ha) do not, and the app flags them as within the uncertainty.
+A systematic edge bias pushes both dates the same way, so it mostly cancels out in a difference.
+Even with the most conservative assumption (opposite biases, added linearly), the 2020 to 2025 change
+of +276 ha is larger than the combined ±100 ha. Small differences, such as +35 ha between 2022 and
+2023, are not, and the app marks them as within the uncertainty.
 
 ## Quality checks
 
-- **Non-reservoir water** (farm ponds, small dams): isolated using a reservoir envelope built from
-  the JRC GSW maximum water extent (largest connected body, ≥ ~92 ha, dilated 30 m). It accounts for
-  **0.2–1.0 ha in Q3 (<0.1%)** — negligible, so it is reported rather than removed. Many ponds are
-  not detected at all in Q3 (dry, turbid or vegetated).
-- **Cloud gaps:** ~0.1% of the parish without valid data in every quarterly composite.
+- **Water outside the reservoir** (farm ponds, small dams) is separated using a reservoir envelope
+  built from the JRC GSW maximum water extent: the largest connected body, at least ~92 ha, dilated
+  by 30 m. It amounts to 0.2–1.0 ha in Q3 (under 0.1%), so I report it instead of removing it. Many
+  ponds are not detected at all in Q3 because they are dry, turbid or overgrown.
+- **Cloud gaps** cover about 0.1% of the parish in every quarterly composite.
 
 ## Limitations
 
-- **Fixed MNDWI threshold (0)** — not scene-adaptive (turbidity, sun angle).
-- The **quarterly median smooths** within-quarter water-level changes: each value is a *typical*
-  extent, not a single instant.
-- The dominant area uncertainty is at the **shoreline**: MNDWI uses B11 (native **20 m**), so mixed
-  edge pixels along this very irregular shoreline may weigh as much as the threshold choice.
-- The uncertainty terms cover the **threshold and shoreline mixed pixels** only; geolocation,
+- The MNDWI threshold is fixed at 0 and does not adapt to the scene (turbidity, sun angle).
+- The quarterly median smooths out level changes within the quarter, so each value is a typical
+  extent for those three months, not a single moment.
+- Most of the area uncertainty comes from the shoreline. MNDWI uses B11 (native 20 m), and along a
+  shoreline this irregular the mixed edge pixels may matter as much as the choice of threshold.
+- The uncertainty terms cover only the threshold and the shoreline mixed pixels. Geolocation,
   radiometric and temporal-mixing errors are not quantified.
-- The JRC comparison is optical-vs-optical (independent validation is the SNIRH test). Its scope is
-  limited: the IoU is a single date; *r* covers 2017–2021 only (the JRC monthly series ends in
-  2021); the >80%-coverage filter biases toward clearer months; and part of *r* reflects the
-  **shared seasonal cycle** of both series.
-- **Area–level test:** ~8% of single-date images are anomalous and must be filtered; the satellite
-  area is ~8% below the area implied by official volume data (systematic, nearly constant).
-- **Volume:** only **changes** in volume are estimated; an absolute value needs a reference volume.
-- **Administrative boundary:** from a WFS-derived CAOP GeoJSON; the exact CAOP edition is
-  unconfirmed. The parish geometry is stable since the 2013 reorganization.
-- The water area is a **proxy for the system state**, driven by both rainfall and reservoir
-  management — the comparison describes differences, it does **not** attribute their causes.
+- The JRC comparison is optical against optical; the independent check is the SNIRH test. Its scope
+  is also narrow: the IoU is for one date, r covers only 2017–2021 (the JRC monthly series ends in
+  2021), the 80% coverage filter favours clearer months, and part of r comes from the seasonal cycle
+  both series share.
+- In the area–level test, about 8% of single-date images are anomalous and have to be filtered out,
+  and the satellite area runs about 8% below the area implied by the official volume data, a nearly
+  constant, systematic gap.
+- Only changes in volume are estimated. An absolute value needs a reference volume.
+- The parish boundary comes from a CAOP GeoJSON derived from WFS, and I have not confirmed the exact
+  CAOP edition. The parish geometry has not changed since the 2013 reorganization.
+- The water area reflects the state of the system, which depends on rainfall and on how the
+  reservoir is managed. The comparison describes differences; it does not say what caused them.
 
 ## Reproduce
 
-Requires a free (non-commercial) **Google Earth Engine** account and Cloud project.
+You need a free (non-commercial) Google Earth Engine account and a Cloud project.
 
 ```bash
 pip install -r requirements.txt
 earthengine authenticate
 ```
 
-Set your Earth Engine project id in the scripts, then run in order:
+Set your Earth Engine project id in the scripts, then run them in order:
 
-| Script | Does |
+| Script | What it does |
 |--------|------|
 | `01_explorar.py` | GEE connectivity + first Sentinel-2 preview |
 | `02_agua.py` | Parish boundary + MNDWI water + area |
@@ -204,26 +208,26 @@ Set your Earth Engine project id in the scripts, then run in order:
 | `19_area_ndwi10.py` | Water area per date with NDWI at 10 m |
 | `20_analise_ndwi10.py` | Final analysis: level validation, filter, area ratio, leave-one-year-out volume error |
 
-Serve the web app locally (it reads the generated data files, so it needs a server — not a
-double-click):
+The web app reads the generated data files, so it has to be served rather than opened with a
+double-click:
 
 ```bash
 python -m http.server 8000
 # then open http://localhost:8000
 ```
 
-## Data sources & credits
+## Data sources and credits
 
-- **Copernicus Sentinel-2** (ESA), via Google Earth Engine.
-- **JRC Global Surface Water** — Pekel, J.-F., Cottam, A., Gorelick, N. & Belward, A. S. (2016).
+- Copernicus Sentinel-2 (ESA), via Google Earth Engine.
+- JRC Global Surface Water: Pekel, J.-F., Cottam, A., Gorelick, N. & Belward, A. S. (2016).
   *High-resolution mapping of global surface water and its long-term changes.* Nature 540, 418–422.
-- **SNIRH** — Sistema Nacional de Informação de Recursos Hídricos, Agência Portuguesa do Ambiente,
-  I.P.: Alqueva water level and volume.
-- **CAOP** — Carta Administrativa Oficial de Portugal, Direção-Geral do Território.
+- SNIRH, Sistema Nacional de Informação de Recursos Hídricos, Agência Portuguesa do Ambiente, I.P.:
+  Alqueva water level and volume.
+- CAOP, Carta Administrativa Oficial de Portugal, Direção-Geral do Território.
 - Basemap tiles: Esri, Maxar, Earthstar Geographics.
 
 ## Author
 
-**Gustavo Santa** · ORCID [0009-0008-4266-0732](https://orcid.org/0009-0008-4266-0732)
+Gustavo Santa · ORCID [0009-0008-4266-0732](https://orcid.org/0009-0008-4266-0732)
 
-Personal portfolio project. _License: MIT (suggested — add a LICENSE file if you agree)._
+A personal portfolio project, released under the MIT License (see `LICENSE`).
