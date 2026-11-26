@@ -153,6 +153,11 @@
     border: 3px solid var(--line); box-shadow: 0 8px 24px rgba(0,0,0,0.4); 
   }
   .autor-info { flex: 1; min-width: 300px; }
+  .lang-toggle { display: inline-flex; gap: 4px; margin: 0 0 14px; }
+  .lang-toggle button { background: transparent; border: 1px solid var(--line); color: var(--muted);
+    font: inherit; font-size: .75rem; font-weight: 600; padding: 3px 10px; border-radius: 4px; cursor: pointer; }
+  .lang-toggle button[aria-pressed="true"] { border-color: var(--b); color: var(--b); }
+  .bio[hidden] { display: none; }
 
   /* MENU DE PROJETOS (GALERIA) */
   .projetos-layout { max-width: 1000px; margin: 50px auto; padding: 20px; text-align: center; }
@@ -221,7 +226,7 @@
     <a href="#" data-target="page-autor">Autor</a>
   </nav>
   <h1>Gustavo Santa · Portfólio Geoespacial</h1>
-  <p>Projetos independentes de Sistemas de Informação Geográfica, Deteção Remota e Automação</p>
+  <p>Projetos independentes de SIG, deteção remota e automação</p>
 </header>
 
 <main id="main-content">
@@ -230,10 +235,10 @@
   <!-- Adicionada a classe "active" aqui para ser a página inicial por defeito -->
   <div id="page-inicio" class="page active">
     <div class="inicio-layout">
-      <h2>Análise do Território e Deteção Remota</h2>
-      <p>Bem-vindo ao meu portfólio. Este espaço tem como objetivo partilhar projetos independentes focados na monitorização, planeamento e modelação do território.</p>
-      <p>Através da combinação de Sistemas de Informação Geográfica (SIG), imagens de satélite e automação em Python, procuro extrair conhecimento geoespacial e comunicar as dinâmicas da paisagem de forma acessível e interativa.</p>
-      <button class="btn-start" onclick="abrirPagina('page-lista-projetos')">Explorar Projetos</button>
+      <h2>Análise do território e deteção remota</h2>
+      <p>Olá, sou o Gustavo. Aqui junto os projetos que faço por conta própria sobre o território: como muda, como se acompanha e como se pode modelar.</p>
+      <p>Trabalho com SIG, imagens de satélite e Python para perceber o que está a acontecer na paisagem, e tento mostrar os resultados de maneira a que qualquer pessoa os possa explorar por si.</p>
+      <button class="btn-start" onclick="abrirPagina('page-lista-projetos')">Ver os projetos</button>
     </div>
   </div>
 
@@ -242,14 +247,14 @@
   <!-- Removida a classe "active" daqui -->
   <div id="page-lista-projetos" class="page">
     <div class="projetos-layout">
-      <h2>Portfólio de Projetos</h2>
+      <h2>Projetos</h2>
       <div class="projetos-grid">
         
         <!-- CARTÃO 1: PROJETO MONSARAZ -->
         <div class="projeto-card" onclick="abrirPagina('page-projeto-monsaraz')">
           <h3>Monsaraz em Mudança</h3>
-          <p>Monitorização da evolução da superfície de água do Alqueva na freguesia de Monsaraz entre 2017 e 2025, usando imagens de satélite Sentinel-2.</p>
-          <span class="btn-ver">Abrir Projeto →</span>
+          <p>Quanta água do Alqueva cabe dentro da freguesia de Monsaraz, e como mudou entre 2017 e 2025? Medido verão a verão com imagens Sentinel-2.</p>
+          <span class="btn-ver">Abrir projeto →</span>
         </div>
 
         <!-- =========================================================================
@@ -266,18 +271,18 @@
         </div> 
         -->
 
-        <!-- CARTÃO 2: ROTURA DE ALQUEVA (página externa, em inglês) -->
+        <!-- CARTÃO 2: ROTURA DE ALQUEVA (página externa) -->
         <div class="projeto-card" onclick="window.open('https://gustavosanta-star.github.io/rotura-alqueva/', '_blank', 'noopener')">
-          <h3>Rotura de Alqueva — Cenário Hipotético</h3>
-          <p>Simulação 2D (HEC-RAS e ArcGIS Pro) da rotura hipotética de Alqueva e Pedrógão: propagação da onda até Vila Real de Santo António, perigosidade (h·v) e população exposta em Portugal e Espanha. Apenas dados abertos.</p>
-          <span class="btn-ver">Abrir Projeto (em inglês) ↗</span>
+          <h3>Rotura de Alqueva: um cenário hipotético</h3>
+          <p>E se Alqueva e Pedrógão rompessem? Uma simulação 2D em HEC-RAS e ArcGIS Pro segue a onda até Vila Real de Santo António e estima a perigosidade (h·v) e a população exposta dos dois lados da fronteira. Feita só com dados abertos.</p>
+          <span class="btn-ver">Abrir projeto ↗</span>
         </div>
 
         <!-- CARTÃO PLACEHOLDER (Para mostrar que vêm aí mais) -->
         <div class="projeto-card placeholder">
-          <h3>Em Breve</h3>
-          <p>Novos projetos de análise geoespacial e deteção remota serão adicionados aqui no futuro.</p>
-          <span class="btn-ver" style="color:var(--muted)">A aguardar...</span>
+          <h3>Em breve</h3>
+          <p>Há mais projetos de análise geoespacial e deteção remota a caminho.</p>
+          <span class="btn-ver" style="color:var(--muted)">Em preparação</span>
         </div>
         
       </div>
@@ -289,7 +294,7 @@
   <!-- Cada projeto tem a sua própria "div" (caixa) com a classe "page" e um ID único -->
   <div id="page-projeto-monsaraz" class="page">
     <div style="text-align: center; padding: 20px 20px 10px;">
-      <h2 style="margin: 0; font-size: 1.3rem; color: var(--ink);">Monsaraz em Mudança · Superfície de Água do Alqueva</h2>
+      <h2 style="margin: 0; font-size: 1.3rem; color: var(--ink);">Monsaraz em Mudança · superfície de água do Alqueva</h2>
       <p style="margin: 5px 0 0; color: var(--muted); font-size: 0.85rem;">Freguesia de Monsaraz · 3.º trimestre (julho–setembro) · 2017–2025</p>
     </div>
 
@@ -304,8 +309,8 @@
           </div>
           <p class="periodo" id="periodoTxt">Comparação limitada ao 3.º trimestre (julho–setembro).</p>
           <div class="toggles">
-            <label><input type="checkbox" id="tgA" checked><span class="swatch" style="background:var(--a)"></span>Superfície de água — Data A</label>
-            <label><input type="checkbox" id="tgB" checked><span class="swatch" style="background:var(--b)"></span>Superfície de água — Data B</label>
+            <label><input type="checkbox" id="tgA" checked><span class="swatch" style="background:var(--a)"></span>Água na data A</label>
+            <label><input type="checkbox" id="tgB" checked><span class="swatch" style="background:var(--b)"></span>Água na data B</label>
             <label><input type="checkbox" id="tgLim" checked><span class="swatch line"></span>Limite da freguesia</label>
           </div>
         </div>
@@ -320,13 +325,13 @@
           </div>
           <div id="uncExpl" hidden style="margin-top:9px">
             <p class="note"><b>Limiar ±:</b> quanto a área varia se o limiar do MNDWI mudar em ±0,05.
-            Mede a robustez à escolha do limiar.</p>
+            Mostra quanto o resultado depende dessa escolha.</p>
             <p class="note"><b>Margem, até ±:</b> pior caso dos pixéis mistos na margem. O MNDWI usa a
             banda B11 (20 m nativos); se todos os pixéis de margem estivessem errados em meio pixel no
             mesmo sentido, a área mudaria até este valor (comprimento da margem × 10 m). Se os erros
             forem aleatórios, anulam-se quase por completo (&lt;1 ha).</p>
-            <p class="note">Nenhum dos dois é um intervalo de confiança estatístico. São limites para
-            perceber que diferenças são robustas.</p>
+            <p class="note">Nenhum dos dois é um intervalo de confiança estatístico. Servem para
+            perceber que diferenças se aguentam e quais podem ser só ruído.</p>
           </div>
           <div class="delta">
             <div class="big" id="deltaV">—</div>
@@ -340,30 +345,31 @@
         <div class="block">
           <h2>Série sazonal 2017–2025 (trimestral)</h2>
           <div id="chart"></div>
-          <p class="note" style="margin-top:6px">Cada ponto é um trimestre observado; os anéis
-          assinalam as duas datas (T3) em comparação. Passa o rato sobre um ponto para ver o valor.</p>
+          <p class="note" style="margin-top:6px">Cada ponto é um trimestre observado, e os anéis marcam as duas datas (T3) que estás a
+          comparar. Passa o rato sobre um ponto para ver o valor.</p>
         </div>
 
         <details class="meth block" open>
           <summary>Sobre o projeto</summary>
           <div class="body">
-            <p class="note">Projeto independente de <b>Gustavo Santa</b> para analisar e comunicar a
-            evolução da superfície de água do Alqueva na freguesia de Monsaraz, combinando
-            processamento geoespacial, análise temporal e uma aplicação web interativa.</p>
+            <p class="note">Fiz este projeto por iniciativa própria, para perceber e mostrar como tem
+            variado a água do Alqueva dentro da freguesia de Monsaraz. Junta processamento
+            geoespacial, análise temporal e esta aplicação web.</p>
             <dl class="meta" style="margin-top:10px">
-              <dt>O que desenvolvi</dt><dd>Todo o <i>pipeline</i> de processamento (Python + Google
+              <dt>O que fiz</dt><dd>Todo o <i>pipeline</i> de processamento (Python + Google
               Earth Engine): seleção e composição das imagens, deteção e vetorização da água, cálculo
               dos indicadores, controlo de qualidade, verificação de consistência e esta aplicação web.</dd>
-              <dt>Dados externos utilizados</dt><dd>Imagens Sentinel-2 (ESA/Copernicus); limite da
+              <dt>Dados de outras fontes</dt><dd>Imagens Sentinel-2 (ESA/Copernicus); limite da
               freguesia da CAOP (DGT); cota e volume do Alqueva do SNIRH (APA); JRC Global Surface
               Water, usado como comparação.</dd>
-              <dt>Como verifiquei os resultados</dt><dd><b>Validação independente</b> com a cota e o
-              volume oficiais do Alqueva, medidos no terreno (SNIRH); comparação de consistência com o
-              JRC (outro produto ótico); e quantificação da incerteza (limiar e margem).</dd>
-              <dt>Limitações</dt><dd>O satélite mede a superfície de água; o volume só se estima em
-              <i>variações</i> (não vê o fundo). Vê cerca de 92% da área implícita no volume oficial,
-              de forma constante (enviesamento sistemático). Cerca de 8% das imagens dão resultados
-              anómalos, assinalados pela validação. Ver <i>Dados e metodologia</i>.</dd>
+              <dt>Como verifiquei os resultados</dt><dd>Comparei a área com a cota e o volume oficiais do
+              Alqueva, medidos no terreno (SNIRH), que é a validação independente. Comparei também com o
+              JRC, outro produto ótico, e quantifiquei a incerteza do limiar e da margem.</dd>
+              <dt>Limitações</dt><dd>O satélite vê a superfície da água, mas não o fundo, por isso o
+              volume só se estima em <i>variações</i>. Vê cerca de 92% da área implícita no volume
+              oficial, sempre na mesma proporção, o que indica um enviesamento sistemático. Cerca de 8%
+              das imagens dão resultados anómalos, e a validação assinala-as. Mais detalhe em
+              <i>Dados e metodologia</i>.</dd>
             </dl>
             <p class="note" style="margin-top:10px">Código aberto:
             <a href="https://github.com/gustavosanta-star/monsaraz-agua-alqueva" style="color:var(--b)">github.com/gustavosanta-star/monsaraz-agua-alqueva</a></p>
@@ -386,8 +392,8 @@
             parte espanhola), medida em imagens Sentinel-2 de <b>datas únicas</b> com o lago quase todo
             visível (menos de 50 ha sem dados), e a <b>cota oficial</b> medida no terreno no mesmo dia (ou
             até 3 dias de diferença), na estação 24M/07A do SNIRH. Numa albufeira, a área inundada cresce
-            com o nível: se a área do satélite seguir a cota, o método está validado por uma fonte que
-            não depende de imagens.</p>
+            com o nível. Se a área medida pelo satélite acompanhar a cota, o método fica validado por
+            uma fonte que nada tem a ver com imagens.</p>
             <p class="note"><b>Datas anómalas:</b> ajusta-se uma curva de 2.º grau e assinalam-se as datas
             com desvio superior a 3,5 vezes a dispersão robusta (critério fixado à partida). São prováveis
             erros de classificação (neblina, nuvens finas, água turva). Mostram-se as duas correlações:
@@ -396,8 +402,8 @@
             oficial (SNIRH, derivado do levantamento topográfico da albufeira), a área do satélite é
             cerca de <b>92%</b> da área implícita no volume oficial, de forma constante em todas as cotas:
             um enviesamento sistemático, provavelmente pixéis mistos da margem classificados como terra.
-            O satélite mede <b>variações</b> de volume, não o volume total: a série reconstruída parte de
-            um volume de referência.</p>
+            Como o satélite só mede <b>variações</b> de volume, a série reconstruída parte de um volume
+            de referência.</p>
             <p class="note"><b>Âmbito:</b> este teste usa o Alqueva inteiro, não só a freguesia de Monsaraz.</p>
           </div>
         </div>
@@ -424,13 +430,14 @@
             margem: media 54–92% da área implícita no volume oficial.</p>
             <p class="note"><b>Filtro automático:</b> o centro de cada albufeira, definido pelo Sentinel-2 no período
             de nível mais baixo de 2017–2025, tem de aparecer como água em ≥ 98%. Se não aparece, a imagem tem
-            neblina, nuvem fina ou reflexo e é rejeitada. Não confunde secas com imagens más.</p>
+            neblina, nuvem fina ou reflexo e é rejeitada. Uma primeira versão, com o núcleo de água
+            permanente do JRC, rejeitava secas reais; esta já não as confunde com imagens más.</p>
             <p class="note"><b>Cota oficial validada:</b> os sensores de cota têm falhas (derivas de semanas, saltos
             de vários metros). Só entram datas em que a cota é coerente com o volume oficial ou com os dias vizinhos.</p>
             <p class="note"><b>Limites:</b> no Enxoé a área do satélite fica a 67% da oficial em todas as cotas, sem
             explicação clara (curva oficial desatualizada ou vegetação aquática). No Lucefécit e na Vigia o núcleo
-            é minúsculo ou inexistente e a cota oficial é ruidosa: o erro não mede só o método. O satélite mede
-            variações de volume; o volume absoluto parte de um valor de referência.</p>
+            é minúsculo ou inexistente e a cota oficial é ruidosa: o erro não mede só o método. E, tal como
+            no Alqueva, o satélite mede variações de volume: o volume absoluto precisa de um valor de referência.</p>
           </div>
         </div>
 
@@ -439,8 +446,8 @@
             <button class="infobtn" id="infoVal" aria-expanded="false" aria-controls="valExpl" title="Como foi calculado?">i</button>
           </h2>
           <div class="valrow">
-            <div class="card"><div class="val">92,7%</div><div class="lab">concordância espacial (IoU) — só julho 2020</div></div>
-            <div class="card"><div class="val">r = 0,80</div><div class="lab">correlação temporal — 41 meses (2017–2021)</div></div>
+            <div class="card"><div class="val">92,7%</div><div class="lab">concordância espacial (IoU), só julho de 2020</div></div>
+            <div class="card"><div class="val">r = 0,80</div><div class="lab">correlação temporal em 41 meses (2017–2021)</div></div>
           </div>
           <div id="valExpl" hidden style="margin-top:9px">
             <p class="note"><b>IoU (julho 2020):</b> sobreposição entre a água deste método e a do
@@ -469,7 +476,7 @@
               <dt>Limiar</dt><dd>Água: MNDWI &gt; 0.</dd>
               <dt>Pós-processamento</dt><dd>Vetorização da máscara e simplificação (tolerância 10 m).</dd>
               <dt>Referência e áreas</dt><dd>Cálculo em ETRS89/PT-TM06 (EPSG:3763); dados servidos em WGS84.</dd>
-              <dt>Limite administrativo</dt><dd>CAOP — Direção-Geral do Território. Versão exata: <i>por confirmar</i>.</dd>
+              <dt>Limite administrativo</dt><dd>CAOP, da Direção-Geral do Território. Versão exata: <i>por confirmar</i>.</dd>
               <dt>Validação independente</dt><dd>Área do Alqueva inteiro em imagens de datas únicas
               (2017–2025) vs. cota oficial do SNIRH (estação 24M/07A); curva de 2.º grau com rejeição
               robusta de datas anómalas (3,5 × MAD). Volume: ΔV = ∫A dh, comparado com o volume oficial
@@ -486,17 +493,17 @@
               Efeito desprezável; não removidas.</dd>
               <dt>Data de processamento</dt><dd>Outubro–novembro de 2026 (Fase 3: novembro de 2026).</dd>
             </dl>
-            <p class="note" style="margin-top:12px"><b>Nota:</b> a comparação descreve diferenças
-            na superfície de água detetada. Não determina, por si só, as causas dessas diferenças.</p>
+            <p class="note" style="margin-top:12px">A comparação mostra onde e quanto mudou a água
+            detetada, mas não explica porquê. A área depende tanto da chuva como da gestão da albufeira.</p>
           </div>
         </details>
 
         <div class="block">
           <h2>Fontes</h2>
-          <p class="src">Imagens: contém dados <b>Copernicus Sentinel</b> modificados (2017–2025), processados via Google Earth Engine.<br>
-          Cota e volume do Alqueva: <b>SNIRH</b> — Agência Portuguesa do Ambiente, I.P.<br>
-          Comparação: <b>JRC Global Surface Water</b> (Pekel et al., 2016).<br>
-          Limite administrativo: <b>CAOP</b> — Direção-Geral do Território.<br>
+          <p class="src">Imagens: contém dados Copernicus Sentinel modificados (2017–2025), processados via Google Earth Engine.<br>
+          Cota e volume do Alqueva: SNIRH, Agência Portuguesa do Ambiente, I.P.<br>
+          Comparação: JRC Global Surface Water (Pekel et al., 2016).<br>
+          Limite administrativo: CAOP, Direção-Geral do Território.<br>
           Base cartográfica: Esri, Maxar, Earthstar Geographics.</p>
         </div>
       </aside>
@@ -536,12 +543,40 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
             <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
           </svg>
-          Ver Perfil no LinkedIn
+          Ver perfil no LinkedIn
         </a>
 
-        <p class="note">Second Lieutenant at the Portuguese Army Geospatial Centre (CIGeoE), where I have worked since 2023 on geospatial data production for the Multinational Geospatial Co-Production Program (MGCP), an international effort to produce standardised geospatial data.</p>
-        <p class="note">My work covers the full production chain: acquiring and editing vector data, validating it against international standards, and automating repetitive processes with Python. More recently, I have been applying Deep Learning to cartographic production, exploring how semantic segmentation can speed up feature extraction from satellite imagery.</p>
-        <p class="note">My background in Spatial Planning gives me a view of geographic data beyond the map itself: how it supports decisions about territory, infrastructure and resources.</p>
+        <div class="lang-toggle" role="group" aria-label="Idioma / Language">
+          <button type="button" data-lang="pt" aria-pressed="true">PT</button>
+          <button type="button" data-lang="en" aria-pressed="false">EN</button>
+        </div>
+        <div class="bio" lang="pt" data-bio="pt">
+        <p class="note">Alferes no Centro de Informação Geoespacial do Exército (CIGeoE), onde trabalho desde 2023 na produção de dados geoespaciais para o Multinational Geospatial Co-Production Program (MGCP), um programa internacional que produz dados geoespaciais normalizados.</p>
+        <p class="note">No dia a dia, isso quer dizer a cadeia de produção inteira: adquirir e editar dados vetoriais, validá-los segundo normas internacionais e escrever Python que nos tire das mãos as partes repetitivas. Ultimamente tenho aplicado deep learning à produção cartográfica, a testar se a segmentação semântica consegue acelerar a extração de elementos a partir de imagens de satélite.</p>
+        <p class="note">Formei-me em Ordenamento do Território, por isso tenho tendência a perguntar para que serve um mapa: que decisões sobre o território, as infraestruturas e os recursos vai acabar por apoiar.</p>
+        
+        <dl class="meta" style="margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line);">
+          <dt style="margin-top:0;">Competências</dt>
+          <dd>
+            <ul style="margin: 8px 0 15px; padding-left: 20px; font-size: 0.78rem; color: var(--muted); line-height: 1.6;">
+              <li>Produção e controlo de qualidade de dados geoespaciais</li>
+              <li>Automação SIG com Python, ArcGIS Pro e arcpy</li>
+              <li>Análise espacial e modelação multicritério</li>
+              <li>Deep learning para deteção remota</li>
+              <li>SQL e bases de dados espaciais</li>
+            </ul>
+          </dd>
+          <dt>Formação</dt>
+          <dd style="margin-top: 5px; color: var(--ink);">
+            Licenciatura em Ordenamento do Território, Universidade de Lisboa <br> 
+            <span style="color:var(--muted);">Mestrando em Sistemas de Informação Geográfica e Modelação Territorial, Universidade de Lisboa</span>
+          </dd>
+        </dl>
+        </div>
+        <div class="bio" lang="en" data-bio="en" hidden>
+        <p class="note">Second Lieutenant at the Portuguese Army Geospatial Centre (CIGeoE), where since 2023 I have worked on geospatial data production for the Multinational Geospatial Co-Production Program (MGCP), an international programme that produces standardised geospatial data.</p>
+        <p class="note">Day to day that means the whole production chain: acquiring and editing vector data, validating it against international standards, and writing Python to take the repetitive parts off our hands. Lately I have been applying deep learning to cartographic production, testing whether semantic segmentation can speed up feature extraction from satellite imagery.</p>
+        <p class="note">I trained in Spatial Planning, so I tend to ask what a map is for: which decisions about land, infrastructure and resources it will end up supporting.</p>
         
         <dl class="meta" style="margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line);">
           <dt style="margin-top:0;">Core skills</dt>
@@ -560,12 +595,23 @@
             <span style="color:var(--muted);">MSc candidate in GIS & Territorial Modelling, Universidade de Lisboa</span>
           </dd>
         </dl>
+        </div>
       </div>
     </div>
   </div>
 
 </main>
 
+<script>
+// Bio do autor em PT/EN
+document.querySelectorAll('.lang-toggle button').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const l=btn.dataset.lang;
+    document.querySelectorAll('.lang-toggle button').forEach(b=>b.setAttribute('aria-pressed',String(b===btn)));
+    document.querySelectorAll('.bio').forEach(d=>{d.hidden=d.dataset.bio!==l;});
+  });
+});
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 /* =======================================================================
@@ -656,8 +702,8 @@ const legenda=L.control({position:'bottomleft'});
 legenda.onAdd=function(){legDiv=L.DomUtil.create('div','legenda');return legDiv;};
 legenda.addTo(map);
 function updateLegenda(a,b){ if(!legDiv) return;
-  legDiv.innerHTML=`<i style="background:${corA}"></i>Água — ${a} · T3<br>`
-                  +`<i style="background:${corB}"></i>Água — ${b} · T3<br>`
+  legDiv.innerHTML=`<i style="background:${corA}"></i>Água em ${a} (T3)<br>`
+                  +`<i style="background:${corB}"></i>Água em ${b} (T3)<br>`
                   +`<i class="line"></i>Limite da freguesia`; }
 window.addEventListener('resize',()=>{ map.invalidateSize(); try{ drawChart(+document.getElementById('selA').value,+document.getElementById('selB').value); drawCota(); }catch(e){} });
 
@@ -789,7 +835,7 @@ function preencherValidacao(){
   if(!validacao) return;
   const f1=validacao.res.fase1_area_cota, f2=validacao.res.fase2_volume;
   document.getElementById('vR').textContent='r = '+nPT(f1.r_sem_anomalas,2);
-  document.getElementById('vRlab').textContent=`área vs. cota — ${f1.datas_na_curva} de ${f1.datas_utilizaveis} datas`;
+  document.getElementById('vRlab').textContent=`área vs. cota (${f1.datas_na_curva} de ${f1.datas_utilizaveis} datas)`;
   document.getElementById('vDisp').textContent=`±${nPT(f1.dispersao_ha,0)} ha (${nPT(f1.dispersao_pct,1)}%)`;
   document.getElementById('vVol').textContent=nPT(f2.serie_rmse_pct,1)+'%';
   document.getElementById('vVollab').textContent=`erro na série de volume (${nPT(f2.serie_rmse_hm3,0)} hm³)`;
